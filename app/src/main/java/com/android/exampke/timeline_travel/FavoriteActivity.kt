@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,26 +85,41 @@ fun FavoriteScreen(){
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            saveList.value.forEachIndexed { index, item ->
+//            saveList.value.forEachIndexed { index, item ->
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                    modifier = Modifier.padding(start = 30.dp)
                 ) {
-                    Text(
-                        text = "입력 : ${item.input}",
-                        fontSize = 15.sp,
-                        modifier = Modifier.weight(1f)
-
+                    Image(
+                        painter = painterResource(id = R.drawable.splashbackgroundimage),
+                        contentDescription = "MangoBanana",
+                        modifier = Modifier
+                            .width(200.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = "번역 : ${item.result}",
-                        fontSize = 15.sp,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Column() {
+                        Text("남산타워", fontSize = 15.sp) // 코드를 넣어야할듯
+                        Text("남산타워 설명 ~", fontSize = 10.sp) // 코드를 넣어야할듯
+                    }
                 }
-            }
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(vertical = 8.dp)
+//                ) {
+//                    Text(
+//                        text = "입력 : ${item.input}",
+//                        fontSize = 15.sp,
+//                        modifier = Modifier.weight(1f)
+//
+//                    )
+//                    Spacer(modifier = Modifier.width(10.dp))
+//                    Text(
+//                        text = "번역 : ${item.result}",
+//                        fontSize = 15.sp,
+//                        modifier = Modifier.weight(1f)
+//                    )
+//                }
+//            }
 //            Image(
 //                painter = painterResource(id = R.drawable.back),
 //                contentDescription = "닫기",

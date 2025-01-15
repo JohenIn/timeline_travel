@@ -1,8 +1,6 @@
 package com.android.exampke.timeline_travel
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import android.content.Intent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -21,10 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 
 
 @Composable
@@ -32,65 +27,54 @@ import androidx.compose.ui.res.painterResource
 fun TopBar() {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFFE2E2E2),
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ), title = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) { Text("APP NAME") }
+            Text("Main Screen")
         }
     )
 }
 
 @Composable
 fun BottomNavigationBar() {
+    var context = LocalContext.current
+
     BottomAppBar(
-        modifier = Modifier
-            .fillMaxWidth(),
-        containerColor = Color(0xFFE2E2E2), // Optional: Set the background color
-        content = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly, // Space icons evenly
-                verticalAlignment = Alignment.CenterVertically // Align icons vertically
+        actions = {
+            IconButton(onClick = { /* do something */ }) {
+                Icon(Icons.Filled.Check, contentDescription = "Localized description")
+            }
+            //즐겨찾기
+            IconButton(onClick = {
+                val intent = Intent(context, FavoriteActivity::class.java)
+                context.startActivity(intent)
+            }) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Localized description",
+                )
+            }
+
+            IconButton(onClick = { /* do something */ }) {
+                Icon(
+                    Icons.Filled.Create,
+                    contentDescription = "Localized description",
+                )
+            }
+            IconButton(onClick = { /* do something */ }) {
+                Icon(
+                    Icons.Filled.PlayArrow,
+                    contentDescription = "Localized description",
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { /* do something */ },
+                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
             ) {
-                IconButton(onClick = { /* Home action */ }) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_home),
-                        contentDescription = "Home"
-                    )
-                }
-                IconButton(onClick = { /* Favorite action */ }) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_favorite),
-                        tint = Color.Unspecified, // Keep original color
-                        contentDescription = "Favorite"
-                    )
-                }
-                IconButton(onClick = { /* Camera action */ }) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_camera),
-                        contentDescription = "Camera"
-                    )
-                }
-                IconButton(onClick = { /* Map action */ }) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_map),
-                        tint = Color.Unspecified,
-                        contentDescription = "Map"
-                    )
-                }
-                IconButton(onClick = { /* Language action */ }) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_language),
-                        tint = Color.Unspecified,
-                        contentDescription = "Language"
-                    )
-                }
+                Icon(Icons.Filled.Add, "Localized description")
             }
         }
     )
