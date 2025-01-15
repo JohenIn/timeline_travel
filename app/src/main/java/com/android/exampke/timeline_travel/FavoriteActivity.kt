@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,10 +12,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -48,7 +52,7 @@ class FavoriteActivity : ComponentActivity() {
 }
 
 @Composable
-fun FavoriteScreen(){
+fun FavoriteScreen() {
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
 
@@ -81,62 +85,52 @@ fun FavoriteScreen(){
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(15.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 //            saveList.value.forEachIndexed { index, item ->
-                Row(
-                    modifier = Modifier.padding(start = 30.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.splashbackgroundimage),
-                        contentDescription = "MangoBanana",
-                        modifier = Modifier
-                            .width(200.dp)
+            Row(
+                modifier = Modifier
+//                    .padding(start = 10.dp)
+                    .fillMaxWidth()
+                    .clickable{
+                        // 화면 전환 로직
+//                        navigateToDetailScreen()
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.timeline),
+                    contentDescription = "랜드마크 이미지",
+                    modifier = Modifier
+                        .width(100.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Column() {
+                    Text( // 랜드마크명
+                        text = "랜드마크명", //${item.input}",
+                        fontSize = 15.sp,
                     )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column() {
-                        Text("남산타워", fontSize = 15.sp) // 코드를 넣어야할듯
-                        Text("남산타워 설명 ~", fontSize = 10.sp) // 코드를 넣어야할듯
-                    }
+                    Text( // 랜드마크 설명
+                        text = "랜드마크 설명", //${item.result}",
+                        fontSize = 15.sp,
+                    )
                 }
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(vertical = 8.dp)
-//                ) {
-//                    Text(
-//                        text = "입력 : ${item.input}",
-//                        fontSize = 15.sp,
-//                        modifier = Modifier.weight(1f)
-//
-//                    )
-//                    Spacer(modifier = Modifier.width(10.dp))
-//                    Text(
-//                        text = "번역 : ${item.result}",
-//                        fontSize = 15.sp,
-//                        modifier = Modifier.weight(1f)
-//                    )
-//                }
-//            }
-//            Image(
-//                painter = painterResource(id = R.drawable.back),
-//                contentDescription = "닫기",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .size(50.dp)
-//                    .clip(CircleShape)
-//                    .clickable {
-//                        val activity = context as? Activity
-//                        activity?.finish()
-//                    }
-//            )
-//            Text(
-//                text = "뒤로",
-//                fontSize = 15.sp
-//            )
+                Spacer(modifier = Modifier
+                    .weight(1f))
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_favorite), // 별 아이콘 리소스
+                    contentDescription = "Favorite",
+                    modifier = Modifier
+//                        .align(Alignment.TopEnd) // 오른쪽 위에 정확히 배치
+                        .clickable {
+                            // 별 아이콘 클릭 시 처리할 로직
+                        }
+//                        .padding(8.dp) // 아이콘과 화면 모서리 간의 간격
+                        .size(20.dp) // 아이콘 크기 설정
+                )
+            }
         }
     }
-
 }
