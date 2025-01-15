@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.android.exampke.timeline_travel"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.android.exampke.timeline_travel"
