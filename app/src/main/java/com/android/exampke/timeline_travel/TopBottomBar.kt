@@ -1,5 +1,6 @@
 package com.android.exampke.timeline_travel
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 
 
@@ -47,6 +49,7 @@ fun TopBar() {
 
 @Composable
 fun BottomNavigationBar() {
+    val context = LocalContext.current
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth(),
@@ -58,33 +61,53 @@ fun BottomNavigationBar() {
                 horizontalArrangement = Arrangement.SpaceEvenly, // Space icons evenly
                 verticalAlignment = Alignment.CenterVertically // Align icons vertically
             ) {
-                IconButton(onClick = { /* Home action */ }) {
+                IconButton(onClick = {
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    context.startActivity(intent)
+                }) {
                     Icon(
                         painter = painterResource(R.drawable.icon_home),
                         contentDescription = "Home"
                     )
                 }
-                IconButton(onClick = { /* Favorite action */ }) {
+                IconButton(onClick = {
+                    val intent = Intent(context, FavoriteActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    context.startActivity(intent)
+                }) {
                     Icon(
                         painter = painterResource(R.drawable.icon_favorite),
                         tint = Color.Unspecified, // Keep original color
                         contentDescription = "Favorite"
                     )
                 }
-                IconButton(onClick = { /* Camera action */ }) {
+                IconButton(onClick = {
+                    val intent = Intent(context, CameraActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    context.startActivity(intent)
+                }) {
                     Icon(
                         painter = painterResource(R.drawable.icon_camera),
                         contentDescription = "Camera"
                     )
                 }
-                IconButton(onClick = { /* Map action */ }) {
+                IconButton(onClick = {
+                    val intent = Intent(context, MapActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    context.startActivity(intent)
+                }) {
                     Icon(
                         painter = painterResource(R.drawable.icon_map),
                         tint = Color.Unspecified,
                         contentDescription = "Map"
                     )
                 }
-                IconButton(onClick = { /* Language action */ }) {
+                IconButton(onClick = {
+                    val intent = Intent(context, LanguageSwitchActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    context.startActivity(intent)
+                }) {
                     Icon(
                         painter = painterResource(R.drawable.icon_language),
                         tint = Color.Unspecified,

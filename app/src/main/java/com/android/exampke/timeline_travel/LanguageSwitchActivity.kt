@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 
-class FavoriteActivity : ComponentActivity() {
+class LanguageSwitchActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -28,7 +28,7 @@ class FavoriteActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    FavoriteScreen(
+                    LanguageSwitchScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -37,11 +37,13 @@ class FavoriteActivity : ComponentActivity() {
     }
 }
 @Composable
-fun FavoriteScreen(modifier: Modifier) {
+fun LanguageSwitchScreen(modifier: Modifier) {
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
         .fillMaxSize()){
-        Text(text = "Favorite Screen")
+        Text(text = "Language Switch Screen")
     }
+
+
 }

@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 
-class FavoriteActivity : ComponentActivity() {
+class CameraActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -28,7 +28,7 @@ class FavoriteActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    FavoriteScreen(
+                    CameraScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -37,11 +37,11 @@ class FavoriteActivity : ComponentActivity() {
     }
 }
 @Composable
-fun FavoriteScreen(modifier: Modifier) {
+fun CameraScreen(modifier: Modifier) {
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
         .fillMaxSize()){
-        Text(text = "Favorite Screen")
+        Text(text = "Camera Screen")
     }
 }

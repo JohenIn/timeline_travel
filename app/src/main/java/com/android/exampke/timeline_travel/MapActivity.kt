@@ -3,18 +3,15 @@ package com.android.exampke.timeline_travel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.core.view.KeyEventDispatcher.Component
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 
-class FavoriteActivity : ComponentActivity() {
+class MapActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -28,7 +25,7 @@ class FavoriteActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    FavoriteScreen(
+                    MapScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -36,12 +33,8 @@ class FavoriteActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
-fun FavoriteScreen(modifier: Modifier) {
-    Column(verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-        .fillMaxSize()){
-        Text(text = "Favorite Screen")
-    }
+fun MapScreen(modifier: Modifier) {
+    GoogleMapView()
 }
