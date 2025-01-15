@@ -68,7 +68,7 @@ fun SplashScreen() {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.weight(1f))
-        Text("AI", color = Color.White, fontSize = 40.sp)
-        Text("한국 가이드", color = Color.White, fontSize = 40.sp)
+        Text("내 손 안의", color = Color.White, fontSize = 40.sp)
+        Text("AI 한국 가이드", color = Color.White, fontSize = 40.sp)
     }
 }

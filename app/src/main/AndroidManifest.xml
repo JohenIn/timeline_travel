@@ -21,11 +21,12 @@
             android:value="AIzaSyD2sF2NWPN7byBhs15pjdj5P54DUrPF_us">
         </meta-data>
 
-        <activity android:name=".SplashActivity"
-            android:exported="true">
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MySplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,10 +37,10 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.Timeline_travel">
         </activity>
-        <activity android:name=".FavoriteActivity"/>
-        <activity android:name=".CameraActivity"/>
-        <activity android:name=".LanguageSwitchActivity"/>
-        <activity android:name=".MapActivity"/>
+        <activity android:name=".FavoriteActivity" />
+        <activity android:name=".CameraActivity" />
+        <activity android:name=".LanguageSwitchActivity" />
+        <activity android:name=".MapActivity" />
     </application>
 
 </manifest>
