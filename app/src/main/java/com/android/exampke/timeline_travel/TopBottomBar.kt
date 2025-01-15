@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 
 
 @Composable
@@ -52,7 +54,8 @@ fun BottomNavigationBar() {
     val context = LocalContext.current
     BottomAppBar(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(60.dp),
         containerColor = Color(0xFFE2E2E2), // Optional: Set the background color
         content = {
             Row(
