@@ -3,9 +3,9 @@ package com.android.exampke.timeline_travel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,12 +16,18 @@ import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             Timeline_travelTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                Scaffold(
+                    topBar = {
+                        TopBar()
+                    },
+                    bottomBar = {
+                        BottomNavigationBar()
+                    },
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    MainScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -30,18 +36,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun MainScreenPreview() {
+    Timeline_travelTheme {
+        MainScreen()
+    }
+}
+
+@Composable
+fun MainScreen(
+    modifier: Modifier = Modifier.fillMaxSize()
+) {
     Text(
-        text = "Hello $name!",
+        text = "Hello!",
         modifier = modifier
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Timeline_travelTheme {
-        Greeting("Android")
-    }
-}
