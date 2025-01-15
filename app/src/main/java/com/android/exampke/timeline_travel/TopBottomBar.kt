@@ -1,5 +1,8 @@
 package com.android.exampke.timeline_travel
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -18,6 +21,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 
 
 @Composable
@@ -25,10 +32,15 @@ import androidx.compose.runtime.Composable
 fun TopBar() {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = Color(0xFFE2E2E2),
             titleContentColor = MaterialTheme.colorScheme.primary,
         ), title = {
-            Text("Main Screen")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) { Text("APP NAME") }
         }
     )
 }
@@ -36,36 +48,49 @@ fun TopBar() {
 @Composable
 fun BottomNavigationBar() {
     BottomAppBar(
-        actions = {
-            IconButton(onClick = { /* do something */ }) {
-                Icon(Icons.Filled.Check, contentDescription = "Localized description")
-            }
-            IconButton(onClick = { /* do something */ }) {
-                Icon(
-                    Icons.Filled.Edit,
-                    contentDescription = "Localized description",
-                )
-            }
-            IconButton(onClick = { /* do something */ }) {
-                Icon(
-                    Icons.Filled.Create,
-                    contentDescription = "Localized description",
-                )
-            }
-            IconButton(onClick = { /* do something */ }) {
-                Icon(
-                    Icons.Filled.PlayArrow,
-                    contentDescription = "Localized description",
-                )
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* do something */ },
-                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+        modifier = Modifier
+            .fillMaxWidth(),
+        containerColor = Color(0xFFE2E2E2), // Optional: Set the background color
+        content = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly, // Space icons evenly
+                verticalAlignment = Alignment.CenterVertically // Align icons vertically
             ) {
-                Icon(Icons.Filled.Add, "Localized description")
+                IconButton(onClick = { /* Home action */ }) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_home),
+                        contentDescription = "Home"
+                    )
+                }
+                IconButton(onClick = { /* Favorite action */ }) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_favorite),
+                        tint = Color.Unspecified, // Keep original color
+                        contentDescription = "Favorite"
+                    )
+                }
+                IconButton(onClick = { /* Camera action */ }) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_camera),
+                        contentDescription = "Camera"
+                    )
+                }
+                IconButton(onClick = { /* Map action */ }) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_map),
+                        tint = Color.Unspecified,
+                        contentDescription = "Map"
+                    )
+                }
+                IconButton(onClick = { /* Language action */ }) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_language),
+                        tint = Color.Unspecified,
+                        contentDescription = "Language"
+                    )
+                }
             }
         }
     )
