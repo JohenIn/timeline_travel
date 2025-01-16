@@ -57,7 +57,6 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
     val userLocation by mapViewModel.userLocation
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
 
-
     // Handle permission requests for accessing fine location
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -70,6 +69,11 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
             Timber.e("Location permission was denied by the user.")
         }
     }
+    // 랜드마크 리스트 정의
+    val landmarks = listOf(
+        LatLng(37.5511694, 126.9882266) to "Namsan Tower", // 남산타워
+        LatLng(37.5194207, 126.9404655) to "63 Building"   // 63빌딩
+    )
 
 // Request the location permission when the composable is launched
     LaunchedEffect(Unit) {
@@ -101,6 +105,14 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
             )
             // Move the camera to the user's location with a zoom level of 10f
             cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 16f)
+        }
+        // 랜드마크 마커 추가
+        landmarks.forEach { (location, name) ->
+            Marker(
+                state = MarkerState(position = location),
+                title = name,
+                snippet = "Famous place in Korea."
+            )
         }
     }
 }
