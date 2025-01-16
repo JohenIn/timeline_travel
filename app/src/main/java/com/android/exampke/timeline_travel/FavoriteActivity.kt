@@ -70,7 +70,7 @@ fun FavoriteScreen(modifier: Modifier) {
 
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier

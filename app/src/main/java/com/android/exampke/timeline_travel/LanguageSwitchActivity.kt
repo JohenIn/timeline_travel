@@ -40,7 +40,7 @@ class LanguageSwitchActivity: ComponentActivity() {
 fun LanguageSwitchScreen(modifier: Modifier) {
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
         .fillMaxSize()){
         Text(text = "Language Switch Screen")
     }

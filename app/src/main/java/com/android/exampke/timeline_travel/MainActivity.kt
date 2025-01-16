@@ -9,8 +9,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -25,16 +25,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +52,6 @@ import androidx.core.content.ContextCompat
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 import com.android.exampke.timeline_travel.viewmodel.MapViewModel
 import com.android.exampke.timeline_travel.viewmodel.ShowGoogleMap
-import kotlin.contracts.contract
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +80,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     modifier: Modifier
 ) {
+
     val context = LocalContext.current
     // 카메라
     val requestPermissionLauncher = rememberLauncherForActivityResult(
@@ -89,19 +96,16 @@ fun MainScreen(
         }
     }
 
-    // 앨범
-
 
     Column(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 30.dp)
-        ) { //카메라
+                .padding(horizontal = 10.dp, vertical = 20.dp)
+        ) {
             Button(onClick = {
                 when {
                     ContextCompat.checkSelfPermission(
@@ -116,17 +120,14 @@ fun MainScreen(
                         requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
                     }
                 }
-            }, modifier = Modifier.height(200.dp))
-            {
+            }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera"
                 )
                 Text("카메라 오픈 버튼")
-            } // 앨범
-            Button(onClick = {
-
-            }, modifier = Modifier.height(200.dp)) {
+            }
+            Button(onClick = { /*TODO*/ }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera"
@@ -146,14 +147,16 @@ fun MainScreen(
                 .padding(end = 8.dp)
                 .horizontalScroll(rememberScrollState())
         ) {
-//            TrendLandmark()
-//            TrendLandmark()
-//            TrendLandmark()
-//            TrendLandmark()
-//            TrendLandmark()
-//            TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
         }
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             "근처 랜드마크",
             fontSize = 30.sp,
@@ -165,11 +168,7 @@ fun MainScreen(
             mapViewModel = MapViewModel(),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
-        )
-        Spacer(
-            modifier = Modifier
-                .height(30.dp)
+                .weight(1f)
         )
     }
 }
@@ -181,13 +180,18 @@ private fun TrendLandmark() {
             .padding(start = 8.dp)
             .width(intrinsicSize = IntrinsicSize.Max)
     ) {
+        val context = LocalContext.current
         Image(
             painter = painterResource(id = R.drawable.splashbackgroundimage),
             contentDescription = "oui",
             modifier = Modifier
-                .height(350.dp)
+                .height(250.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .clickable {},
+                .clickable {
+                    val intent = Intent(context, LandmarkDetailActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    context.startActivity(intent)
+                },
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
