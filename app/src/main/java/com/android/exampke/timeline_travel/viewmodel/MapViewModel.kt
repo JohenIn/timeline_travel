@@ -1,6 +1,8 @@
 package com.android.exampke.timeline_travel.viewmodel
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -70,10 +72,39 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
         }
     }
     // 랜드마크 리스트 정의
-    val landmarks = listOf(
-        LatLng(37.5511694, 126.9882266) to "Namsan Tower", // 남산타워
-        LatLng(37.5194207, 126.9404655) to "63 Building"   // 63빌딩
+//    val landmarks = listOf(
+//        LatLng(37.5511694, 126.9882266) to "Namsan Tower", // 남산타워
+//        LatLng(37.5194207, 126.9404655) to "63 Building"   // 63빌딩
+//    )
+
+    // google map url로 넣기
+    val placesUrls = listOf(
+        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5710015!4d126.9769419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "Namsan Tower",
+        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5740015!4d126.9799419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "63 Building",
+        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5790015!4d126.9829419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "Dongdaemun Design Plaza"
     )
+
+    val markers = remember { mutableStateOf<List<Pair<LatLng, String>>>(emptyList()) }
+
+    // URL에서 위도와 경도 추출하는 함수
+    fun extractLatLngFromUrl(url: String): LatLng? {
+        val regex = """3d(-?\d+\.\d+).*4d(-?\d+\.\d+)""".toRegex()
+        val matchResult = regex.find(url)
+        return matchResult?.let {
+            val latitude = it.groupValues[1].toDouble()
+            val longitude = it.groupValues[2].toDouble()
+            LatLng(latitude, longitude)
+        }
+    }
+    LaunchedEffect(Unit) {
+        // placesUrls에서 위도와 경도를 추출하여 마커로 추가
+        val resolvedMarkers = placesUrls.mapNotNull { (url, name) ->
+            extractLatLngFromUrl(url)?.let { location ->
+                location to name
+            }
+        }
+        markers.value = resolvedMarkers
+    }
 
 // Request the location permission when the composable is launched
     LaunchedEffect(Unit) {
@@ -106,12 +137,17 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
             // Move the camera to the user's location with a zoom level of 10f
             cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 16f)
         }
-        // 랜드마크 마커 추가
-        landmarks.forEach { (location, name) ->
+        // 마커 추가 -> 지도 위에 위치 띄워주는 거 해야됨
+        markers.value.forEach { (location, name) ->
             Marker(
                 state = MarkerState(position = location),
                 title = name,
-                snippet = "Famous place in Korea."
+                onClick = {
+                    // 마커 클릭 시 구글맵에서 장소 열기
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(placesUrls.first { it.second == name }.first))
+                    context.startActivity(intent)
+                    true
+                }
             )
         }
     }
