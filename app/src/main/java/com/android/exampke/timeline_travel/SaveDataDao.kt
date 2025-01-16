@@ -1,10 +1,9 @@
-package com.android.exampke.timeline_travel.viewmodel
+package com.android.exampke.timeline_travel
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.android.exampke.timeline_travel.SaveData
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface SaveDataDao {
