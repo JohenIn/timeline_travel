@@ -32,6 +32,11 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // 앱 시작 시 저장된 언어 설정 적용
+        val savedLanguage = loadLanguagePreference(this) ?: "ko" // 기본값은 한국어
+        setLocale(this, savedLanguage)
+
         setContent {
             Timeline_travelTheme {
                 SplashScreen()

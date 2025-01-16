@@ -105,7 +105,7 @@ fun FavoriteScreen(modifier: Modifier) {
                         // 화면 전환 로직
 //                        navigateToDetailScreen()
                     },
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.timeline),
@@ -117,11 +117,17 @@ fun FavoriteScreen(modifier: Modifier) {
                 Column() {
                     Text( // 랜드마크명
                         text = "랜드마크명", //${item.input}",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text( // 랜드마크명
+                        text = "랜드마크간단주소지", //${item.input}",
                         fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
                     )
                     Text( // 랜드마크 설명
-                        text = "랜드마크 설명", //${item.result}",
-                        fontSize = 15.sp,
+                        text = "랜드마크 설명(20자까지만 보여주고 그 이후는 ...", //${item.result}",
+                        fontSize = 15.sp
                     )
                 }
                 Spacer(modifier = Modifier
