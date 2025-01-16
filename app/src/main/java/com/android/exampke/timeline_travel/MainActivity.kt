@@ -89,7 +89,6 @@ fun MainScreen(
                 )
                 Text("앨범 오픈 버튼")
             }
-
         }
         Text(
             "요즘 뜨는 장소",
@@ -109,7 +108,6 @@ fun MainScreen(
             TrendLandmark()
             TrendLandmark()
             TrendLandmark()
-
         }
         Spacer(modifier = Modifier.height(50.dp))
         Text(
