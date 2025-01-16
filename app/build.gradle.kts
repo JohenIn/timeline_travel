@@ -74,4 +74,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    // 앨범
+    implementation("com.google.mlkit:text-recognition:16.0.0")
+    implementation("com.google.mlkit:vision:16.0.0")
 }
