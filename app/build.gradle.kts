@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.android.exampke.timeline_travel"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -74,7 +74,8 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
-    // 앨범
-    implementation("com.google.mlkit:text-recognition:16.0.0")
-    implementation("com.google.mlkit:vision:16.0.0")
+
+    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
+    implementation("io.coil-kt:coil-gif:2.6.0")
 }

@@ -1,13 +1,16 @@
 package com.android.exampke.timeline_travel
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,6 +37,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,22 +87,40 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     modifier: Modifier
 ) {
-
     val context = LocalContext.current
+
     // 카메라
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // 권한이 허락되면 카메라 실행
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             context.startActivity(intent)
         } else {
-            // 권한이 거부되면 Toast로 메시지 표시
             Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
-
+    // 갤러리 이미지 LandmarkDetailActivity로 넘기기
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageUri: Uri? = result.data?.data
+            imageUri?.let {
+                val intent = Intent(context, LandmarkDetailActivity::class.java)
+                intent.putExtra("capturedImageUri", it.toString())
+                context.startActivity(intent)
+            }
+        }
+    }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            val intent = Intent(context, LandmarkDetailActivity::class.java)
+            intent.putExtra("selectedImageUri", uri.toString())
+            context.startActivity(intent)
+        }
+    }
 
     Column(
         modifier = modifier
@@ -127,7 +152,9 @@ fun MainScreen(
                 )
                 Text("카메라 오픈 버튼")
             }
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.height(50.dp)) {
+            Button(onClick = {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera"
@@ -135,6 +162,8 @@ fun MainScreen(
                 Text("앨범 오픈 버튼")
             }
         }
+
+
         Text(
             "요즘 뜨는 장소",
             fontSize = 30.sp,
