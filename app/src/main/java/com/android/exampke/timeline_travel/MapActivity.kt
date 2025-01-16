@@ -37,7 +37,9 @@ class MapActivity : ComponentActivity() {
 
 @Composable
 fun MapScreen(modifier: Modifier) {
-    ShowGoogleMap(mapViewModel = MapViewModel(), modifier = Modifier
-        .fillMaxSize())
+    ShowGoogleMap(mapViewModel = MapViewModel(), modifier = modifier
+        .fillMaxSize()
+    )
+
 }
 

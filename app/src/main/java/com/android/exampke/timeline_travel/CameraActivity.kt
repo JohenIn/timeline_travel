@@ -40,7 +40,7 @@ class CameraActivity : ComponentActivity() {
 fun CameraScreen(modifier: Modifier) {
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
         .fillMaxSize()){
         Text(text = "Camera Screen")
     }

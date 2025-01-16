@@ -65,24 +65,22 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     modifier: Modifier
 ) {
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
+    Column(modifier = modifier
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 30.dp)
+                .padding(horizontal = 10.dp, vertical = 20.dp)
         ) {
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.height(200.dp)) {
+            Button(onClick = { /*TODO*/ }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera"
                 )
                 Text("카메라 오픈 버튼")
             }
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.height(200.dp)) {
+            Button(onClick = { /*TODO*/ }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera"
@@ -108,8 +106,10 @@ fun MainScreen(
             TrendLandmark()
             TrendLandmark()
             TrendLandmark()
+            TrendLandmark()
+            TrendLandmark()
         }
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             "근처 랜드마크",
             fontSize = 30.sp,
@@ -121,11 +121,7 @@ fun MainScreen(
             mapViewModel = MapViewModel(),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
-        )
-        Spacer(
-            modifier = Modifier
-                .height(30.dp)
+                .weight(1f)
         )
     }
 }
@@ -141,7 +137,7 @@ private fun TrendLandmark() {
             painter = painterResource(id = R.drawable.splashbackgroundimage),
             contentDescription = "oui",
             modifier = Modifier
-                .height(350.dp)
+                .height(250.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {},
         )
