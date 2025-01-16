@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -132,10 +133,11 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
             Marker(
                 state = MarkerState(position = it), // Place the marker at the user's location
                 title = "Your Location", // Set the title for the marker
-                snippet = "This is where you are currently located." // Set the snippet for the marker
+                snippet = "This is where you are currently located.", // Set the snippet for the marker
+                icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
             )
             // Move the camera to the user's location with a zoom level of 10f
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 16f)
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 15f)
         }
         // 마커 추가 -> 지도 위에 위치 띄워주는 거 해야됨
         markers.value.forEach { (location, name) ->

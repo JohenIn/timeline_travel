@@ -106,7 +106,7 @@ fun BottomNavigationBar() {
                 painter = painterResource(R.drawable.icon_camera),
                 contentDescription = "Camera",
                 tint = Color.White, // 아이콘 색상: 흰색
-                modifier = Modifier.padding(bottom = 5.dp).scale(1.2f) // 아이콘 패딩 추가
+                modifier = Modifier.padding(bottom = 5.dp) // 아이콘 패딩 추가
             )
         }
         IconButton(onClick = {

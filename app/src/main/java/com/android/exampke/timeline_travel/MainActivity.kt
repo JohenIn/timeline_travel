@@ -132,7 +132,6 @@ fun MainScreen(
         )
         Row(
             modifier = Modifier
-                .padding(end = 8.dp)
                 .horizontalScroll(rememberScrollState())
         ) {
             TrendLandmark()
@@ -140,9 +139,7 @@ fun MainScreen(
             TrendLandmark()
             TrendLandmark()
             TrendLandmark()
-            TrendLandmark()
-            TrendLandmark()
-            TrendLandmark()
+            Spacer(modifier = Modifier.width(15.dp))
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -165,7 +162,7 @@ fun MainScreen(
 private fun TrendLandmark() {
     Column(
         modifier = Modifier
-            .padding(start = 8.dp)
+            .padding(start = 15.dp)
             .width(intrinsicSize = IntrinsicSize.Max)
     ) {
         val context = LocalContext.current
@@ -176,7 +173,7 @@ private fun TrendLandmark() {
                 .height(250.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
-                    val intent = Intent(context, LoadImageActivity::class.java)
+                    val intent = Intent(context, LandmarkDetailActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     context.startActivity(intent)
                 },
