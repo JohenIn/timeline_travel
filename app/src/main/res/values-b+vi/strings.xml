@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">timeline_travel</string>
+    <string name="splashscreen_subtitle">HƯỚNG DẪN AI HÀN QUỐC\n\nTRONG TÚI CỦA BẠN</string>
+    <string name="open_camera">Mở Máy Ảnh</string>
+    <string name="open_album">Mở Album</string>
+    <string name="trending_landmark">Địa Danh Nổi Bật</string>
+    <string name="nearby_landmark">Địa Danh Gần Bạn</string>
+    <string name="favorite_landmark">Địa Danh Yêu Thích Của Bạn</string>
+    <string name="select_language">Chọn Ngôn Ngữ</string>
+</resources>

@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +52,11 @@ import com.android.exampke.timeline_travel.viewmodel.ShowGoogleMap
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 앱 시작 시 저장된 언어 설정 적용
+        val savedLanguage = loadLanguagePreference(this) ?: "ko" // 기본값은 한국어
+        setLocale(this, savedLanguage)
+
         setContent {
             Timeline_travelTheme {
                 Scaffold(
@@ -70,6 +76,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun MainScreen(
@@ -139,20 +146,20 @@ fun MainScreen(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera"
                 )
-                Text("카메라 오픈 버튼")
+                Text(stringResource(R.string.open_camera))
             }
             Button(onClick = {
                 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }, modifier = Modifier.height(50.dp)) {
                 Icon(
-                    painter = painterResource(id = R.drawable.icon_camera),
-                    contentDescription = "camera"
+                    painter = painterResource(id = R.drawable.icon_album),
+                    contentDescription = "album"
                 )
-                Text("앨범 오픈 버튼")
+                Text(stringResource(R.string.open_album))
             }
         }
         Text(
-            "요즘 뜨는 장소",
+            stringResource(R.string.trending_landmark),
             fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold,
             lineHeight = 50.sp,
@@ -171,7 +178,7 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            "근처 랜드마크",
+            stringResource(R.string.nearby_landmark),
             fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold,
             lineHeight = 50.sp,
