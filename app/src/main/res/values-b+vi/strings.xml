@@ -8,4 +8,5 @@
     <string name="nearby_landmark">Địa Danh Gần Bạn</string>
     <string name="favorite_landmark">Địa Danh Yêu Thích Của Bạn</string>
     <string name="select_language">Chọn Ngôn Ngữ</string>
+    <string name="search_landmark">Địa danh tôi tìm được là gì?</string>
 </resources>

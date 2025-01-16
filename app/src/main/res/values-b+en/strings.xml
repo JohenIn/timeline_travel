@@ -8,4 +8,5 @@
     <string name="nearby_landmark">Landmark Nearby You</string>
     <string name="favorite_landmark">Your Favorite Landmark</string>
     <string name="select_language">Choose Your Language</string>
+    <string name="search_landmark">What\'s the landmark I found?</string>
 </resources>

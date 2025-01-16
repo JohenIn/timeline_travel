@@ -103,7 +103,7 @@ fun MainScreen(
         if (result.resultCode == Activity.RESULT_OK) {
             val imageUri: Uri? = result.data?.data
             imageUri?.let {
-                val intent = Intent(context, LoadImageActivity::class.java)
+                val intent = Intent(context, LoadAlbumImageActivity::class.java)
                 intent.putExtra("capturedImageUri", it.toString())
                 context.startActivity(intent)
             }
@@ -112,7 +112,7 @@ fun MainScreen(
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            val intent = Intent(context, LoadImageActivity::class.java)
+            val intent = Intent(context, LoadAlbumImageActivity::class.java)
             intent.putExtra("selectedImageUri", uri.toString())
             context.startActivity(intent)
         }

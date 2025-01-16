@@ -110,9 +110,19 @@ fun BottomNavigationBar() {
         }
         IconButton(
             onClick = {
-                val intent = Intent(context, CameraActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                context.startActivity(intent)
+                when {
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        context.startActivity(intent)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                    }
+                }
             },
             modifier = Modifier
                 .scale(1.5f)
@@ -126,20 +136,7 @@ fun BottomNavigationBar() {
                 painter = painterResource(R.drawable.icon_camera),
                 contentDescription = "Camera",
                 tint = Color.White, // 아이콘 색상: 흰색
-                modifier = Modifier.padding(bottom = 5.dp).
-            clickable { when {
-                ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    context.startActivity(intent)
-                }
-
-                else -> {
-                    requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                }
-            } }// 아이콘 패딩 추가
+                modifier = Modifier.padding(bottom = 5.dp)
             )
         }
         IconButton(onClick = {

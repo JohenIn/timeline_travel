@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 
-class LoadImageActivity : ComponentActivity() {
+class LoadAlbumImageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -44,7 +44,7 @@ class LoadImageActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    LoadImageScreen(
+                    LoadAlbumImageScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -54,8 +54,8 @@ class LoadImageActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoadImageScreen(modifier: Modifier) {
-    val context = LocalContext.current as LoadImageActivity
+fun LoadAlbumImageScreen(modifier: Modifier) {
+    val context = LocalContext.current as LoadAlbumImageActivity
     // Intent로 전달된 이미지 가져오기
     val imageUriString = context.intent.getStringExtra("selectedImageUri")
     val imageUri = imageUriString?.let { Uri.parse(it) }
@@ -74,7 +74,7 @@ fun LoadImageScreen(modifier: Modifier) {
                 tint = Color.Unspecified
             )
         }
-        Text(text = "내가 찍은 사진은?")
+
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -88,9 +88,7 @@ fun LoadImageScreen(modifier: Modifier) {
                 )
             }
         }
-        Text("랜드마크 이름")
-        Text("랜드마크 간단 주소지")
-        Text("사진 보기  |  관련 영상  |  기본 정보")
+        Text(text = "내가 찾은 랜드마크는?")
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -98,12 +96,14 @@ fun LoadImageScreen(modifier: Modifier) {
                 .width(210.dp)
                 .height(280.dp)
         ) { Text("랜드마크의 대표 이미지") }
-        Text("타이틀 - 상세 정보")
+        Text("랜드마크 이름")
+        Text("랜드마크 간단 주소지")
+        Text("타이틀 - 상세 정보(역사 및 배경)")
         Text("상세 정보 내용, fold 가능")
-        Text("타이틀 - 최근 뉴스")
+        Text("타이틀 - 최근 뉴스, 어디 나왔는지")
+        Text("있으면 YouTube API")
         Text("관련 내용들, fold 가능")
-        Text("필요시 YouTube API")
-        Text("타이틀 - 기본 정보")
-        Text("기본 정보 내용들, fold 가능")
+        Text("기본 정보")
+        Text("기본 정보(상세 주소, 이용 시간), fold가능")
     }
 }
