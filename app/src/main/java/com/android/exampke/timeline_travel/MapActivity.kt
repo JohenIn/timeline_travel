@@ -1,23 +1,33 @@
 package com.android.exampke.timeline_travel
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 import com.android.exampke.timeline_travel.viewmodel.MapViewModel
 import com.android.exampke.timeline_travel.viewmodel.ShowGoogleMap
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
+import timber.log.Timber
 
-class MainActivity : ComponentActivity() {
+class MapActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -31,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    MainScreen(
+                    MapScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -40,18 +50,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
-fun MainScreen(
-    modifier: Modifier
-) {
-    Column(modifier = modifier) {
-        Text(
-            text = "Hello!",
-        )
-        ShowGoogleMap(mapViewModel = MapViewModel(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp))
-    }
+fun MapScreen(modifier: Modifier) {
+    ShowGoogleMap(mapViewModel = MapViewModel(), modifier = Modifier
+        .fillMaxSize())
 }
+

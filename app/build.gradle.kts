@@ -2,9 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
-    //room
     id("com.google.devtools.ksp")
+
 }
 
 android {
@@ -60,15 +59,19 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //room
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("com.google.maps.android:maps-compose:2.12.0")
+
+    implementation(libs.timber)
+
     val room_version = "2.6.1"
-
     implementation("androidx.room:room-runtime:$room_version")
-
     // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
     // See Add the KSP plugin to your project
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
-
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 }

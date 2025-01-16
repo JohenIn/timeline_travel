@@ -16,14 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,23 +40,34 @@ class FavoriteActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Timeline_travelTheme {
-                FavoriteScreen()
+                Scaffold(
+                    topBar = {
+                        TopBar()
+                    },
+                    bottomBar = {
+                        BottomNavigationBar()
+                    },
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    FavoriteScreen(
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
             }
         }
     }
 }
-
 @Composable
-fun FavoriteScreen() {
+fun FavoriteScreen(modifier: Modifier) {
+
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
-
     // DB에서 데이터 가져오기
     val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
-
     // input과 result 상태 정의
     var input by remember { mutableStateOf("") }
     var result by remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -120,7 +126,8 @@ fun FavoriteScreen() {
                 Spacer(modifier = Modifier
                     .weight(1f))
                 Icon(
-                    painter = painterResource(id = R.drawable.icon_favorite), // 별 아이콘 리소스
+                    painter = painterResource(id = R.drawable.icon_favorite),
+                    tint = Color.Unspecified,// 별 아이콘 리소스
                     contentDescription = "Favorite",
                     modifier = Modifier
 //                        .align(Alignment.TopEnd) // 오른쪽 위에 정확히 배치

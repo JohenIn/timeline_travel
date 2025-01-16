@@ -4,15 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.android.exampke.timeline_travel.viewmodel.SaveDataDao
 
 @Database(entities = [SaveData::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun saveDataDao(): SaveDataDao
-
     companion object MyDb {
         @Volatile
         private var instance: AppDatabase? = null
-
         fun getDatabase(context: Context): AppDatabase {
             return instance ?: synchronized(this){
                 Room.databaseBuilder(
@@ -23,6 +22,5 @@ abstract class AppDatabase : RoomDatabase() {
                     .also { instance = it }
             }
         }
-
     }
 }
