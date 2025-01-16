@@ -1,8 +1,10 @@
 package com.android.exampke.timeline_travel
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,8 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 
 class LoadImageActivity : ComponentActivity() {
@@ -51,6 +55,10 @@ class LoadImageActivity : ComponentActivity() {
 
 @Composable
 fun LoadImageScreen(modifier: Modifier) {
+    val context = LocalContext.current as LoadImageActivity
+    // Intent로 전달된 이미지 가져오기
+    val imageUriString = context.intent.getStringExtra("selectedImageUri")
+    val imageUri = imageUriString?.let { Uri.parse(it) }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -69,16 +77,24 @@ fun LoadImageScreen(modifier: Modifier) {
         Text(text = "내가 찍은 사진은?")
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.background(color = Color.Blue)
+            modifier = Modifier
                 .width(90.dp)
-                .height(120.dp)
-        ) { Text("불러온 이미지") }
+        ) {
+            imageUri?.let {
+                Image(
+                    painter = rememberAsyncImagePainter(it), // URI를 통해 이미지를 로드
+                    contentDescription = "불러온 이미지",
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
         Text("랜드마크 이름")
         Text("랜드마크 간단 주소지")
         Text("사진 보기  |  관련 영상  |  기본 정보")
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.background(color = Color.Blue)
+            modifier = Modifier
+                .background(color = Color.Blue)
                 .width(210.dp)
                 .height(280.dp)
         ) { Text("랜드마크의 대표 이미지") }

@@ -1,13 +1,16 @@
 package com.android.exampke.timeline_travel
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,6 +32,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -83,7 +90,26 @@ fun MainScreen(
             Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
-
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageUri: Uri? = result.data?.data
+            imageUri?.let {
+                val intent = Intent(context, LoadImageActivity::class.java)
+                intent.putExtra("capturedImageUri", it.toString())
+                context.startActivity(intent)
+            }
+        }
+    }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            val intent = Intent(context, LoadImageActivity::class.java)
+            intent.putExtra("selectedImageUri", uri.toString())
+            context.startActivity(intent)
+        }
+    }
 
     Column(
         modifier = modifier
@@ -115,7 +141,9 @@ fun MainScreen(
                 )
                 Text("카메라 오픈 버튼")
             }
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.height(50.dp)) {
+            Button(onClick = {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera"

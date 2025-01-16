@@ -75,6 +75,10 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 
-    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
+
+    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
+    implementation("io.coil-kt:coil-gif:2.6.0")
 
 }
