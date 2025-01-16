@@ -6,13 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
-import com.android.exampke.timeline_travel.viewmodel.MapViewModel
-import com.android.exampke.timeline_travel.viewmodel.ShowGoogleMap
 
-class MapActivity : ComponentActivity() {
+class LandmarkDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,7 +25,7 @@ class MapActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    MapScreen(
+                    LandMarkDetailScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -36,8 +35,6 @@ class MapActivity : ComponentActivity() {
 }
 
 @Composable
-fun MapScreen(modifier: Modifier) {
-    ShowGoogleMap(mapViewModel = MapViewModel(), modifier = Modifier
-        .fillMaxSize())
+fun LandMarkDetailScreen(modifier: Modifier) {
+    Text(text = "Landmark Detail Screen")
 }
-
