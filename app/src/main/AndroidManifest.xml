@@ -51,6 +51,7 @@
         <activity android:name=".CameraActivity" />
         <activity android:name=".LanguageSwitchActivity" />
         <activity android:name=".MapActivity" />
+        <activity android:name=".LoadImageActivity"/>
         <activity android:name=".LandmarkDetailActivity"/>
     </application>
 

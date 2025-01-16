@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 
-class LandmarkDetailActivity : ComponentActivity() {
+class LoadImageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -40,7 +40,7 @@ class LandmarkDetailActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    LandmarkDetailScreen(
+                    LoadImageScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -50,7 +50,7 @@ class LandmarkDetailActivity : ComponentActivity() {
 }
 
 @Composable
-fun LandmarkDetailScreen(modifier: Modifier) {
+fun LoadImageScreen(modifier: Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
