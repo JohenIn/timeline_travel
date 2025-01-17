@@ -1,5 +1,6 @@
 package com.android.exampke.timeline_travel
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.MediaStore
@@ -7,14 +8,12 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,6 +56,9 @@ fun TopBar() {
 
 @Composable
 fun BottomNavigationBar() {
+    val context = LocalContext.current
+    val currentActivityName = (context as? Activity)?.javaClass?.simpleName ?: ""
+
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.Bottom,
@@ -64,11 +66,14 @@ fun BottomNavigationBar() {
             .fillMaxWidth()
             .height(50.dp)
             .background(Color.White)
-            .graphicsLayer(clip = false).drawBehind {
-                drawLine(color = Color(0x552b2b2b),
+            .graphicsLayer(clip = false)
+            .drawBehind {
+                drawLine(
+                    color = Color(0x552b2b2b),
                     start = Offset(0f, 0f),
                     end = Offset(size.width, 0f),
-                    strokeWidth = 1.dp.toPx())
+                    strokeWidth = 1.dp.toPx()
+                )
             }
     ) {
         val context = LocalContext.current
@@ -93,7 +98,8 @@ fun BottomNavigationBar() {
             Icon(
                 painter = painterResource(R.drawable.icon_home),
                 contentDescription = "Home",
-                modifier = Modifier.scale(0.9f)
+                modifier = Modifier.scale(0.8f),
+                tint = if (currentActivityName == "MainActivity") Color.Unspecified else Color.Gray
             )
         }
         IconButton(onClick = {
@@ -103,9 +109,9 @@ fun BottomNavigationBar() {
         }) {
             Icon(
                 painter = painterResource(R.drawable.icon_favorite),
-//                    tint = Color.Unspecified, // Keep original color
                 contentDescription = "Favorite",
-                modifier = Modifier.scale(0.9f)
+                modifier = Modifier.scale(0.8f),
+                tint = if (currentActivityName == "FavoriteActivity") Color.Unspecified else Color.Gray
             )
         }
         IconButton(
@@ -146,9 +152,9 @@ fun BottomNavigationBar() {
         }) {
             Icon(
                 painter = painterResource(R.drawable.icon_map),
-                tint = Color.Unspecified,
+                tint = if (currentActivityName == "MapActivity") Color.Unspecified else Color.Gray,
                 contentDescription = "Map",
-                modifier = Modifier.scale(0.9f)
+                modifier = Modifier.scale(0.8f)
             )
         }
         IconButton(onClick = {
@@ -158,10 +164,10 @@ fun BottomNavigationBar() {
         }) {
             Icon(
                 painter = painterResource(R.drawable.icon_language),
-                tint = Color.Unspecified,
+                tint = if (currentActivityName == "LanguageSwitchActivity") Color.Unspecified else Color.Gray,
                 contentDescription = "Language",
-                modifier = Modifier.scale(0.9f)
+                modifier = Modifier.scale(0.8f)
             )
         }
-    }}
-
+    }
+}
