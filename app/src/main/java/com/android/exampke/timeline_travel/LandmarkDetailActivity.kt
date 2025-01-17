@@ -56,13 +56,13 @@ class LandmarkDetailActivity : ComponentActivity() {
 @Composable
 fun LandMarkDetailScreen(modifier: Modifier) {
     val context = LocalContext.current as LandmarkDetailActivity
-    // Intent로 전달된 두 이미지 URI 가져오기
-    val imageUriString = context.intent.getStringExtra("selectedImageUri")
+    // Intent로 전달된 카메라 URI 가져오기
     val capturedImageUriString = context.intent.getStringExtra("capturedImageUri")
-
-    // 각각의 URI를 Uri로 변환
-    val imageUri = imageUriString?.let { Uri.parse(it) }
     val capturedImageUri = capturedImageUriString?.let { Uri.parse(it) }
+
+    // Intent로 전달된 앨범 URI 가져오기
+    val imageUriString = context.intent.getStringExtra("selectedImageUri")
+    val imageUri = imageUriString?.let { Uri.parse(it) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

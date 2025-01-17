@@ -120,19 +120,8 @@ fun MainScreen(
             Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
-// 카메라로 찍은 사진 LoadCameraImageActivity로 넘기기
-
 
     // 갤러리 이미지 LandmarkDetailActivity로 넘기기
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            uri?.let {
-                val intent = Intent(context, LandmarkDetailActivity::class.java)
-                intent.putExtra("selectedImageUri", it.toString()) // Intent로 URI 전달
-                context.startActivity(intent)
-            }
-        }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val pickMedia =
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
