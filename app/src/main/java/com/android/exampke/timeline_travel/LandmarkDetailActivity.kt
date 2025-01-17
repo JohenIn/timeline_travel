@@ -56,9 +56,13 @@ class LandmarkDetailActivity : ComponentActivity() {
 @Composable
 fun LandMarkDetailScreen(modifier: Modifier) {
     val context = LocalContext.current as LandmarkDetailActivity
-    // Intent로 전달된 이미지 가져오기
+    // Intent로 전달된 두 이미지 URI 가져오기
     val imageUriString = context.intent.getStringExtra("selectedImageUri")
+    val capturedImageUriString = context.intent.getStringExtra("capturedImageUri")
+
+    // 각각의 URI를 Uri로 변환
     val imageUri = imageUriString?.let { Uri.parse(it) }
+    val capturedImageUri = capturedImageUriString?.let { Uri.parse(it) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +81,7 @@ fun LandMarkDetailScreen(modifier: Modifier) {
         Text(text = "내가 찍은 사진은?")
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.background(color = Color.Blue)
+            modifier = Modifier
                 .width(150.dp)
                 .height(200.dp)
         ){

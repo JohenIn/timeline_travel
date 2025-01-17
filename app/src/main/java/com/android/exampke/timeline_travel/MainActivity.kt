@@ -56,6 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import coil3.Bitmap
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 import com.android.exampke.timeline_travel.viewmodel.MapViewModel
 import com.android.exampke.timeline_travel.viewmodel.ShowGoogleMap
@@ -88,39 +89,58 @@ fun MainScreen(
     modifier: Modifier
 ) {
     val context = LocalContext.current
+    var capturedBitmap: Bitmap? by remember { mutableStateOf(null) }
 
-    // 카메라
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // 카메라 앱에서 받은 Bitmap을 처리
+            val bitmap = result.data?.extras?.getParcelable<Bitmap>("data")
+            if (bitmap != null) {
+                capturedBitmap = bitmap // Bitmap을 상태에 저장
+
+                // Intent로 Bitmap 전달
+                val intent = Intent(context, LoadCameraImageActivity::class.java)
+                intent.putExtra("capturedImageBitmap", capturedBitmap) // Bitmap을 Intent에 전달
+                context.startActivity(intent)
+            } else {
+                Toast.makeText(context, "사진을 저장하지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    // 카메라 권한 설정
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            context.startActivity(intent)
+            cameraLauncher.launch(intent)
         } else {
             Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
+// 카메라로 찍은 사진 LoadCameraImageActivity로 넘기기
+
+
     // 갤러리 이미지 LandmarkDetailActivity로 넘기기
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val imageUri: Uri? = result.data?.data
-            imageUri?.let {
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            uri?.let {
                 val intent = Intent(context, LandmarkDetailActivity::class.java)
-                intent.putExtra("capturedImageUri", it.toString())
+                intent.putExtra("selectedImageUri", it.toString()) // Intent로 URI 전달
                 context.startActivity(intent)
             }
         }
-    }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            val intent = Intent(context, LandmarkDetailActivity::class.java)
-            intent.putExtra("selectedImageUri", uri.toString())
-            context.startActivity(intent)
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                val intent = Intent(context, LandmarkDetailActivity::class.java)
+                intent.putExtra("selectedImageUri", uri.toString())
+                context.startActivity(intent)
+            }
         }
-    }
 
     Column(
         modifier = modifier
@@ -132,19 +152,7 @@ fun MainScreen(
                 .padding(horizontal = 10.dp, vertical = 20.dp)
         ) {
             Button(onClick = {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        android.Manifest.permission.CAMERA
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        context.startActivity(intent)
-                    }
-
-                    else -> {
-                        requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                    }
-                }
+                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
             }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
