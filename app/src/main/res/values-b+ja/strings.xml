@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">timeline_travel</string>
+    <string name="splashscreen_subtitle">AI韓国ガイド\n\nポケットの中に</string>
+    <string name="open_camera">カメラを開く</string>
+    <string name="open_album">アルバムを開く</string>
+    <string name="trending_landmark">話題のランドマーク</string>
+    <string name="nearby_landmark">近くのランドマーク</string>
+    <string name="favorite_landmark">お気に入りのランドマーク</string>
+    <string name="select_language">言語を選択してください</string>
+    <string name="search_landmark">見つけたランドマークって何？</string>
+</resources>
