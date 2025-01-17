@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import coil3.compose.AsyncImage
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 import com.android.exampke.timeline_travel.viewmodel.MapViewModel
 import com.android.exampke.timeline_travel.viewmodel.ShowGoogleMap
@@ -106,7 +108,6 @@ fun MainScreen(
             }
         }
     }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             val intent = Intent(context, LoadAlbumImageActivity::class.java)
@@ -166,11 +167,15 @@ fun MainScreen(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
         ) {
-            TrendLandmark()
-            TrendLandmark()
-            TrendLandmark()
-            TrendLandmark()
-            TrendLandmark()
+            val randomLandmarks = remember { landmarks.shuffled().take(5) }
+            randomLandmarks.forEach { landmark ->
+                TrendLandmark(
+                    imageUri = landmark.images,
+                    name = landmark.name,
+                    location = landmark.location
+                )
+            }
+
             Spacer(modifier = Modifier.width(15.dp))
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -191,18 +196,21 @@ fun MainScreen(
 }
 
 @Composable
-private fun TrendLandmark() {
+private fun TrendLandmark(imageUri: String, name: String, location: String) {
     Column(
         modifier = Modifier
             .padding(start = 15.dp)
-            .width(intrinsicSize = IntrinsicSize.Max)
+            .width(IntrinsicSize.Max)
     ) {
         val context = LocalContext.current
-        Image(
-            painter = painterResource(id = R.drawable.splashbackgroundimage),
-            contentDescription = "oui",
+        // AsyncImage로 URI 기반 이미지 로드
+        AsyncImage(
+            model = imageUri, // imageUri를 모델로 전달
+            contentDescription = "Landmark Image",
+            contentScale = ContentScale.Crop, // 이미지 스케일 조정
             modifier = Modifier
                 .height(250.dp)
+                .width(180.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
                     val intent = Intent(context, LandmarkDetailActivity::class.java)
@@ -216,8 +224,8 @@ private fun TrendLandmark() {
                 .fillMaxWidth()
                 .padding(horizontal = 5.dp)
         ) {
-            Text("경복궁", lineHeight = 30.sp, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(name, lineHeight = 30.sp, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
-        Text("서울시 종로구", lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
+        Text(location, lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
     }
 }
