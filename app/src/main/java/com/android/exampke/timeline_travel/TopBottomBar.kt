@@ -102,6 +102,7 @@ fun BottomNavigationBar() {
                 }
             }
         }
+
         // 카메라
         val requestPermissionLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission()
@@ -109,7 +110,7 @@ fun BottomNavigationBar() {
             if (isGranted) {
                 // 권한이 허락되면 카메라 실행
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                context.startActivity(intent)
+                cameraLauncher.launch(intent)
             } else {
                 // 권한이 거부되면 Toast로 메시지 표시
                 Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
@@ -160,9 +161,8 @@ fun BottomNavigationBar() {
             )
         }
         IconButton(onClick = {
-            val intent = Intent(context, MapActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            context.startActivity(intent)
+            requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+
         }) {
             Icon(
                 painter = painterResource(R.drawable.icon_map),
