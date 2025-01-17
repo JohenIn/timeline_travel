@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,7 +81,7 @@ fun FavoriteScreen(modifier: Modifier) {
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = "즐겨찾기 목록",
+                stringResource(R.string.favorite_landmark),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(5.dp),
@@ -104,7 +105,7 @@ fun FavoriteScreen(modifier: Modifier) {
                         // 화면 전환 로직
 //                        navigateToDetailScreen()
                     },
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.timeline),
@@ -116,11 +117,17 @@ fun FavoriteScreen(modifier: Modifier) {
                 Column() {
                     Text( // 랜드마크명
                         text = "랜드마크명", //${item.input}",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text( // 랜드마크명
+                        text = "랜드마크간단주소지", //${item.input}",
                         fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
                     )
                     Text( // 랜드마크 설명
-                        text = "랜드마크 설명", //${item.result}",
-                        fontSize = 15.sp,
+                        text = "랜드마크 설명(20자까지만 보여주고 그 이후는 ...", //${item.result}",
+                        fontSize = 15.sp
                     )
                 }
                 Spacer(modifier = Modifier

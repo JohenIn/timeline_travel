@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">timeline_travel</string>
+    <string name="splashscreen_subtitle">AI KOREA GUIDE\n\nIN YOUR POCKET</string>
+    <string name="open_camera">"Open Camera</string>
+    <string name="open_album">Open Album</string>
+    <string name="trending_landmark">Trending Landmark</string>
+    <string name="nearby_landmark">Landmark Nearby You</string>
+    <string name="favorite_landmark">Your Favorite Landmark</string>
+    <string name="select_language">Choose Your Language</string>
+    <string name="search_landmark">What\'s the landmark I found?</string>
+</resources>

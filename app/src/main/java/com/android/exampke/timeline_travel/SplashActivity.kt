@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +32,11 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // 앱 시작 시 저장된 언어 설정 적용
+        val savedLanguage = loadLanguagePreference(this) ?: "ko" // 기본값은 한국어
+        setLocale(this, savedLanguage)
+
         setContent {
             Timeline_travelTheme {
                 SplashScreen()
@@ -45,9 +51,6 @@ class SplashActivity : ComponentActivity() {
     }
 }
 
-@Preview
-
-
 @Composable
 fun SplashScreen() {
     Column(
@@ -60,15 +63,15 @@ fun SplashScreen() {
             .padding(vertical = 100.dp, horizontal = 30.dp)
     ) {
         Text(
-            "[앱 이름]",
+            stringResource(R.string.app_name),
             color = Color.Black,
             fontSize = 80.sp,
+            lineHeight = 100.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.weight(1f))
-        Text("내 손 안의", color = Color.White, fontSize = 40.sp)
-        Text("AI 한국 가이드", color = Color.White, fontSize = 40.sp)
+        Text(stringResource(R.string.splashscreen_subtitle), color = Color.White, fontSize = 40.sp)
     }
 }

@@ -1,7 +1,13 @@
 package com.android.exampke.timeline_travel
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.provider.MediaStore
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 
 
 @Composable
@@ -42,7 +50,7 @@ fun TopBar() {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
-            ) { Text("APP NAME") }
+            ) { Text(stringResource(R.string.app_name)) }
         }
     )
 }
@@ -64,7 +72,19 @@ fun BottomNavigationBar() {
             }
     ) {
         val context = LocalContext.current
-
+        // 카메라
+        val requestPermissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                // 권한이 허락되면 카메라 실행
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                context.startActivity(intent)
+            } else {
+                // 권한이 거부되면 Toast로 메시지 표시
+                Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
         IconButton(onClick = {
             val intent = Intent(context, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
@@ -90,9 +110,19 @@ fun BottomNavigationBar() {
         }
         IconButton(
             onClick = {
-                val intent = Intent(context, CameraActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                context.startActivity(intent)
+                when {
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        context.startActivity(intent)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                    }
+                }
             },
             modifier = Modifier
                 .scale(1.5f)
@@ -106,7 +136,7 @@ fun BottomNavigationBar() {
                 painter = painterResource(R.drawable.icon_camera),
                 contentDescription = "Camera",
                 tint = Color.White, // 아이콘 색상: 흰색
-                modifier = Modifier.padding(bottom = 5.dp).scale(1.2f) // 아이콘 패딩 추가
+                modifier = Modifier.padding(bottom = 5.dp)
             )
         }
         IconButton(onClick = {
