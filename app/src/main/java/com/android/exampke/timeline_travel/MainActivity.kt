@@ -2,8 +2,6 @@ package com.android.exampke.timeline_travel
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
@@ -12,7 +10,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
+import coil3.Bitmap
 import coil3.compose.AsyncImage
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 import com.android.exampke.timeline_travel.viewmodel.MapViewModel
@@ -54,8 +51,6 @@ import com.android.exampke.timeline_travel.viewmodel.ShowGoogleMap
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         setContent {
             Timeline_travelTheme {
                 Scaffold(
@@ -81,8 +76,28 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     modifier: Modifier
 ) {
-
     val context = LocalContext.current
+    var capturedBitmap: Bitmap? by remember { mutableStateOf(null) }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // 카메라 앱에서 받은 Bitmap을 처리
+            val bitmap = result.data?.extras?.getParcelable<Bitmap>("data")
+            if (bitmap != null) {
+                capturedBitmap = bitmap // Bitmap을 상태에 저장
+
+                // Intent로 Bitmap 전달
+                val intent = Intent(context, LoadCameraImageActivity::class.java)
+                intent.putExtra("capturedImageBitmap", capturedBitmap) // Bitmap을 Intent에 전달
+                context.startActivity(intent)
+            } else {
+                Toast.makeText(context, "사진을 저장하지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     // 카메라
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -90,31 +105,20 @@ fun MainScreen(
         if (isGranted) {
             // 권한이 허락되면 카메라 실행
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            context.startActivity(intent)
+            cameraLauncher.launch(intent)
         } else {
             // 권한이 거부되면 Toast로 메시지 표시
             Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val imageUri: Uri? = result.data?.data
-            imageUri?.let {
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
                 val intent = Intent(context, LoadAlbumImageActivity::class.java)
-                intent.putExtra("capturedImageUri", it.toString())
+                intent.putExtra("selectedImageUri", uri.toString())
                 context.startActivity(intent)
             }
         }
-    }
-    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            val intent = Intent(context, LoadAlbumImageActivity::class.java)
-            intent.putExtra("selectedImageUri", uri.toString())
-            context.startActivity(intent)
-        }
-    }
 
     Column(
         modifier = modifier
@@ -126,19 +130,7 @@ fun MainScreen(
                 .padding(horizontal = 10.dp, vertical = 20.dp)
         ) {
             Button(onClick = {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        android.Manifest.permission.CAMERA
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        context.startActivity(intent)
-                    }
-
-                    else -> {
-                        requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                    }
-                }
+                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
             }, modifier = Modifier.height(50.dp)) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
@@ -209,7 +201,7 @@ private fun TrendLandmark(imageUri: String, name: String, location: String) {
             contentDescription = "Landmark Image",
             contentScale = ContentScale.Crop, // 이미지 스케일 조정
             modifier = Modifier
-                .height(250.dp)
+                .height(240.dp)
                 .width(180.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
