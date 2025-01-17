@@ -22,6 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -34,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import coil3.Bitmap
 
 
 @Composable
@@ -77,6 +82,26 @@ fun BottomNavigationBar() {
             }
     ) {
         val context = LocalContext.current
+        var capturedBitmap: Bitmap? by remember { mutableStateOf(null) }
+
+        val cameraLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // 카메라 앱에서 받은 Bitmap을 처리
+                val bitmap = result.data?.extras?.getParcelable<Bitmap>("data")
+                if (bitmap != null) {
+                    capturedBitmap = bitmap // Bitmap을 상태에 저장
+
+                    // Intent로 Bitmap 전달
+                    val intent = Intent(context, LoadCameraImageActivity::class.java)
+                    intent.putExtra("capturedImageBitmap", capturedBitmap) // Bitmap을 Intent에 전달
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(context, "사진을 저장하지 못했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
         // 카메라
         val requestPermissionLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission()
@@ -116,19 +141,8 @@ fun BottomNavigationBar() {
         }
         IconButton(
             onClick = {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        android.Manifest.permission.CAMERA
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        context.startActivity(intent)
-                    }
+                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
 
-                    else -> {
-                        requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                    }
-                }
             },
             modifier = Modifier
                 .scale(1.5f)
