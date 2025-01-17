@@ -162,9 +162,7 @@ fun MainScreen(
             val randomLandmarks = remember { landmarks.shuffled().take(5) }
             randomLandmarks.forEach { landmark ->
                 TrendLandmark(
-                    imageUri = landmark.images,
-                    name = landmark.name,
-                    location = landmark.location
+                    landmark = landmark
                 )
             }
 
@@ -188,36 +186,29 @@ fun MainScreen(
 }
 
 @Composable
-private fun TrendLandmark(imageUri: String, name: String, location: String) {
+private fun TrendLandmark(landmark: Landmark) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .padding(start = 15.dp)
             .width(IntrinsicSize.Max)
     ) {
-        val context = LocalContext.current
-        // AsyncImage로 URI 기반 이미지 로드
         AsyncImage(
-            model = imageUri, // imageUri를 모델로 전달
+            model = landmark.images,
             contentDescription = "Landmark Image",
-            contentScale = ContentScale.Crop, // 이미지 스케일 조정
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .height(240.dp)
                 .width(180.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
-                    val intent = Intent(context, LandmarkDetailActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    val intent = Intent(context, LandmarkDetailActivity::class.java).apply {
+                        putExtra("landmark", landmark) // Landmark 객체 전달
+                    }
                     context.startActivity(intent)
                 },
         )
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 5.dp)
-        ) {
-            Text(name, lineHeight = 30.sp, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        }
-        Text(location, lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
+        Text(landmark.name, lineHeight = 30.sp, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(landmark.location, lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
     }
 }

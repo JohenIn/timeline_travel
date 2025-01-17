@@ -1,5 +1,9 @@
 package com.android.exampke.timeline_travel
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Landmark(
     val images: String,
     val name: String,
@@ -10,7 +14,7 @@ data class Landmark(
     val address: String,
     val openingHours: String,
     val googleMapUrl: String,
-)
+) : Parcelable
 
 val landmarks = listOf(
     Landmark(

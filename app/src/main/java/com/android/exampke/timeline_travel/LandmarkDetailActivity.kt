@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -21,10 +22,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil3.compose.AsyncImage
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -33,28 +39,28 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 class LandmarkDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val landmark = intent.getParcelableExtra<Landmark>("landmark")
+
         setContent {
             Timeline_travelTheme {
                 Scaffold(
-                    topBar = {
-                        TopBar()
-                    },
-                    bottomBar = {
-                        BottomNavigationBar()
-                    },
+                    topBar = { TopBar() },
+                    bottomBar = { BottomNavigationBar() },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    LandmarkDetailScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    landmark?.let {
+                        LandmarkDetailScreen(
+                            modifier = Modifier.padding(innerPadding),
+                            landmark = it
+                        )
+                    }
                 }
             }
         }
     }
 }
-
 @Composable
-fun LandmarkDetailScreen(modifier: Modifier) {
+fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -62,7 +68,7 @@ fun LandmarkDetailScreen(modifier: Modifier) {
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        Row() {
+        Row {
             Spacer(modifier = Modifier.weight(1f))
             Icon(
                 painter = painterResource(id = R.drawable.icon_favorite),
@@ -70,22 +76,29 @@ fun LandmarkDetailScreen(modifier: Modifier) {
                 tint = Color.Unspecified
             )
         }
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.background(color = Color.Blue)
-                .width(210.dp)
+        AsyncImage(
+            model = landmark.images,
+            contentDescription = "Landmark Image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
                 .height(280.dp)
-        ) { Text("랜드마크의 대표 이미지") }
-        Text("랜드마크 이름")
-        Text("랜드마크 간단 주소지")
-        Text("타이틀 - 상세 정보(역사 및 배경)")
-        Text("상세 정보 내용, fold 가능")
-        Text("타이틀 - 최근 뉴스, 어디 나왔는지")
-        Text("있으면 YouTube API")
-        YouTubePlayerScreen(videoId = "nF1zZIETE5k")
-        Text("관련 내용들, fold 가능")
-        Text("기본 정보")
-        Text("기본 정보(상세 주소, 이용 시간), fold가능")
+                .width(210.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
+        Text(landmark.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(landmark.location, fontSize = 18.sp, color = Color.Gray)
+        Text("History", fontWeight = FontWeight.Bold)
+        Text(landmark.history)
+        Text("Recent News", fontWeight = FontWeight.Bold)
+        Text(landmark.recentNews)
+        landmark.youTubeVideoId?.let { videoId ->
+            Text("YouTube Video", fontWeight = FontWeight.Bold)
+            YouTubePlayerScreen(videoId = videoId)
+        }
+        Text("Address", fontWeight = FontWeight.Bold)
+        Text(landmark.address)
+        Text("Opening Hours", fontWeight = FontWeight.Bold)
+        Text(landmark.openingHours)
     }
 }
 
