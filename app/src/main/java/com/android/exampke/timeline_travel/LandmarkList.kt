@@ -14,6 +14,7 @@ data class Landmark(
     val address: String,
     val openingHours: String,
     val googleMapUrl: String,
+    var isFavorited: Boolean = true // 즐겨찾기 여부 상태 추가
 ) : Parcelable
 
 val landmarks = listOf(
