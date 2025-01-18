@@ -2,7 +2,6 @@ package com.android.exampke.timeline_travel
 
 import android.os.Parcelable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import kotlinx.parcelize.Parcelize
 

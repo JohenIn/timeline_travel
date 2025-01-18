@@ -2,7 +2,6 @@ package com.android.exampke.timeline_travel
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -34,10 +33,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import coil3.Bitmap
 
 
@@ -47,7 +46,7 @@ fun TopBar() {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color(0xFFE2E2E2),
-            titleContentColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = colorResource(R.color.theme_main_blue),
         ), title = {
             Row(
                 modifier = Modifier
@@ -125,7 +124,7 @@ fun BottomNavigationBar() {
                 painter = painterResource(R.drawable.icon_home),
                 contentDescription = "Home",
                 modifier = Modifier.scale(0.8f),
-                tint = if (currentActivityName == "MainActivity") Color.Unspecified else Color.Gray
+                tint = if (currentActivityName == "MainActivity") colorResource(R.color.theme_sub_blue) else Color.Gray
             )
         }
         IconButton(onClick = {
@@ -149,7 +148,7 @@ fun BottomNavigationBar() {
                 .scale(1.5f)
                 .padding(bottom = 0.dp)
                 .background(
-                    color = Color(0xFF4382C4), // 배경색
+                    color = colorResource(R.color.theme_main_blue), // 배경색
                     shape = CircleShape // 원형 배경
                 )
         ) {
@@ -168,7 +167,7 @@ fun BottomNavigationBar() {
         }) {
             Icon(
                 painter = painterResource(R.drawable.icon_map),
-                tint = if (currentActivityName == "MapActivity") Color.Unspecified else Color.Gray,
+                tint = if (currentActivityName == "MapActivity") colorResource(R.color.theme_sub_blue) else Color.Gray,
                 contentDescription = "Map",
                 modifier = Modifier.scale(0.8f)
             )
@@ -180,7 +179,7 @@ fun BottomNavigationBar() {
         }) {
             Icon(
                 painter = painterResource(R.drawable.icon_language),
-                tint = if (currentActivityName == "LanguageSwitchActivity") Color.Unspecified else Color.Gray,
+                tint = if (currentActivityName == "LanguageSwitchActivity") colorResource(R.color.theme_sub_blue) else Color.Gray,
                 contentDescription = "Language",
                 modifier = Modifier.scale(0.8f)
             )
