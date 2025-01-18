@@ -68,6 +68,7 @@ class FavoriteActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
 
@@ -158,6 +159,11 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
                     // 즐겨찾기 상태 변경
                     landmark.isFavorited = !landmark.isFavorited
                     onFavoriteChanged(landmark) // 변경된 상태 반영
+                    // 즐겨찾기 상태 변경 후 화면 새로고침
+                    val intent = Intent(context, FavoriteActivity::class.java)
+                    // 현재 액티비티를 종료하고 새로 시작하는 방식
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    context.startActivity(intent)
                 }
         )
         Spacer(modifier = Modifier.height(50.dp))
