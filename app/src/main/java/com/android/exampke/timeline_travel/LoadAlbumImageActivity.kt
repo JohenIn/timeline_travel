@@ -45,7 +45,7 @@ class LoadAlbumImageActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     LoadAlbumImageScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding).background(Color.White)
                     )
                 }
             }

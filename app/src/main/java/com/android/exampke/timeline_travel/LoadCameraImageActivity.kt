@@ -45,7 +45,7 @@ class LoadCameraImageActivity : ComponentActivity() {
                 ) { innerPadding ->
                     val capturedBitmap = intent.getParcelableExtra<Bitmap>("capturedImageBitmap")
                     LoadCameraImageScreen(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.padding(innerPadding).background(Color.White),
                         capturedBitmap = capturedBitmap // 전달받은 Bitmap을 화면에 전달
                     )
                 }

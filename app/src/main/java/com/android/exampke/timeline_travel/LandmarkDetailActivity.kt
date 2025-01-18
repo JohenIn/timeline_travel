@@ -50,7 +50,7 @@ class LandmarkDetailActivity : ComponentActivity() {
                 ) { innerPadding ->
                     landmark?.let {
                         LandmarkDetailScreen(
-                            modifier = Modifier.padding(innerPadding),
+                            modifier = Modifier.padding(innerPadding).background(Color.White),
                             landmark = it
                         )
                     }
