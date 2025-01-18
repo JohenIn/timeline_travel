@@ -50,7 +50,9 @@ class LandmarkDetailActivity : ComponentActivity() {
                 ) { innerPadding ->
                     landmark?.let {
                         LandmarkDetailScreen(
-                            modifier = Modifier.padding(innerPadding).background(Color.White),
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .background(Color.White),
                             landmark = it
                         )
                     }
@@ -59,13 +61,14 @@ class LandmarkDetailActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(horizontal = 10.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Row {

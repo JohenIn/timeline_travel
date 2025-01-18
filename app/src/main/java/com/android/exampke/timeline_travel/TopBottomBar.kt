@@ -53,7 +53,7 @@ fun TopBar() {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
-            ) { Text(stringResource(R.string.app_name)) }
+            ) { Text(stringResource(R.string.app_name), color = colorResource(R.color.theme_main_blue)) }
         }
     )
 }

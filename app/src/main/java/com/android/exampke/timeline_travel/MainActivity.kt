@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -136,23 +137,40 @@ fun MainScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 20.dp)
         ) {
-            Button(onClick = {
-                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-            }, modifier = Modifier.height(50.dp)) {
+            Button(
+                onClick = {
+                    requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                },
+                colors = ButtonDefaults.buttonColors(Color.Transparent),
+                modifier = Modifier
+                    .height(50.dp)
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
-                    contentDescription = "camera"
+                    contentDescription = "camera",
+                    tint = colorResource(R.color.theme_main_blue)
                 )
-                Text(stringResource(R.string.open_camera))
+                Text(
+                    stringResource(R.string.open_camera),
+                    color = colorResource(R.color.theme_main_blue)
+                )
             }
-            Button(onClick = {
-                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            }, modifier = Modifier.height(50.dp)) {
+            Button(
+                onClick = {
+                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                },
+                colors = ButtonDefaults.buttonColors(Color.Transparent),
+                modifier = Modifier.height(50.dp)
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_album),
-                    contentDescription = "album"
+                    contentDescription = "album",
+                    tint = colorResource(R.color.theme_main_blue)
                 )
-                Text(stringResource(R.string.open_album))
+                Text(
+                    stringResource(R.string.open_album),
+                    color = colorResource(R.color.theme_main_blue)
+                )
             }
         }
         SectionTitle(R.string.trending_landmark)
@@ -178,11 +196,11 @@ fun MainScreen(
                 .weight(1f)
                 .padding(end = 15.dp)
         ) {
-            RegionalLandmark("수도권", R.drawable.korea_sudokwon, listOf("서울","인천","경기"))
-            RegionalLandmark("충청도", R.drawable.korea_chungchung, listOf("충청","대전"))
-            RegionalLandmark("강원도", R.drawable.korea_gangwon,listOf("강원"))
-            RegionalLandmark("경상도", R.drawable.korea_gyungsang, listOf("경상","부산","대구","울산"))
-            RegionalLandmark("전라도", R.drawable.korea_jullla, listOf("전라","광주","제주"))
+            RegionalLandmark("수도권", R.drawable.korea_sudokwon, listOf("서울", "인천", "경기"))
+            RegionalLandmark("충청도", R.drawable.korea_chungchung, listOf("충청", "대전"))
+            RegionalLandmark("강원도", R.drawable.korea_gangwon, listOf("강원"))
+            RegionalLandmark("경상도", R.drawable.korea_gyungsang, listOf("경상", "부산", "대구", "울산"))
+            RegionalLandmark("전라도", R.drawable.korea_jullla, listOf("전라", "광주", "제주"))
         }
     }
 }
@@ -213,13 +231,20 @@ fun TrendLandmark(landmark: Landmark) {
             modifier = Modifier
                 .height(240.dp)
                 .width(180.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(20.dp))
                 .clickable {
                     val intent = Intent(context, LandmarkDetailActivity::class.java).apply {
                         putExtra("landmark", landmark) // Landmark 객체 전달
                     }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+
                     context.startActivity(intent)
-                },
+                }
+                .border(
+                    0.8.dp,
+                    colorResource(R.color.theme_sub_blue),
+                    RoundedCornerShape(20.dp)
+                ),
         )
         Text(
             landmark.name,
@@ -242,22 +267,22 @@ fun RegionalLandmark(region: String, map: Int, regionFilters: List<String>) {
     Box(
         modifier = Modifier
             .clickable {
-
                 val intent = Intent(context, RegionalLandmarkActivity::class.java).apply {
                     putParcelableArrayListExtra("filteredLandmarks", ArrayList(filteredLandmarks))
                 }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 context.startActivity(intent)
             }
             .height(256.dp)
             .width(144.dp)
             .border(
-                0.5.dp,
+                0.8.dp,
                 colorResource(R.color.theme_sub_orange),
-                RoundedCornerShape(8.dp)
+                RoundedCornerShape(20.dp)
             )
             .background(Color.White)
-            .padding(10.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .padding(5.dp)
+            .clip(RoundedCornerShape(20.dp))
     ) {
         Image(
             painter = painterResource(id = map),
@@ -269,7 +294,9 @@ fun RegionalLandmark(region: String, map: Int, regionFilters: List<String>) {
             lineHeight = 30.sp,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(alignment = Alignment.BottomEnd)
+            modifier = Modifier
+                .align(alignment = Alignment.BottomEnd)
+                .padding(end = 10.dp, bottom = 10.dp)
         )
     }
 }

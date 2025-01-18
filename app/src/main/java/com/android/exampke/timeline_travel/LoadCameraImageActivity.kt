@@ -60,7 +60,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(horizontal = 10.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Row() {

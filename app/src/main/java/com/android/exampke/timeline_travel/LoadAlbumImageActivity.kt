@@ -63,7 +63,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(horizontal = 10.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Row() {
