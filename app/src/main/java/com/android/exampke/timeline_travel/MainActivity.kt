@@ -159,13 +159,12 @@ fun MainScreen(
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
         ) {
-            val randomLandmarks = remember { landmarks.shuffled().take(5) }
+            val randomLandmarks = getLandmarks().shuffled().take(5)
             randomLandmarks.forEach { landmark ->
                 TrendLandmark(
                     landmark = landmark
                 )
             }
-
             Spacer(modifier = Modifier.width(15.dp))
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -208,7 +207,13 @@ private fun TrendLandmark(landmark: Landmark) {
                     context.startActivity(intent)
                 },
         )
-        Text(landmark.name, lineHeight = 30.sp, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        Text(landmark.location, lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
+        Text(
+            landmark.name,
+            lineHeight = 30.sp,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 5.dp)
+        )
+        Text(landmark.location, lineHeight = 20.sp, modifier = Modifier.padding(start = 5.dp))
     }
 }

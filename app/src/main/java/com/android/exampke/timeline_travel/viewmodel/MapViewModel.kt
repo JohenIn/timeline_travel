@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
-import com.android.exampke.timeline_travel.landmarks
+import com.android.exampke.timeline_travel.getLandmarks
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -85,6 +85,7 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
 //        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5740015!4d126.9799419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "63 Building",
 //        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5790015!4d126.9829419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "Dongdaemun Design Plaza"
 //    )
+    val landmarks = getLandmarks()
 
     // Step 1: Extract `googleMapUrl` and `name` from `landmarks`
     val placesUrls = landmarks.map { landmark ->

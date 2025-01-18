@@ -70,6 +70,7 @@ class FavoriteActivity : ComponentActivity() {
 }
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
+    val landmarks = getLandmarks()
 
     // 즐겨찾기 상태를 관리하는 리스트
     val favoriteLandmarks = remember { mutableStateListOf<Landmark>() }

@@ -161,7 +161,9 @@ fun BottomNavigationBar() {
             )
         }
         IconButton(onClick = {
-            requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+            val intent = Intent(context, MapActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            context.startActivity(intent)
 
         }) {
             Icon(
