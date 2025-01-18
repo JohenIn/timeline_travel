@@ -1,7 +1,10 @@
 package com.android.exampke.timeline_travel
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -116,6 +119,15 @@ fun BottomNavigationBar() {
             }
         }
         IconButton(onClick = {
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                vibrator.vibrate(vibrationEffect)
+            } else {
+                // API 26 미만에서는 진동 시간만 설정 가능
+                vibrator.vibrate(50)
+            }
+
             val intent = Intent(context, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             context.startActivity(intent)
@@ -128,6 +140,15 @@ fun BottomNavigationBar() {
             )
         }
         IconButton(onClick = {
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                vibrator.vibrate(vibrationEffect)
+            } else {
+                // API 26 미만에서는 진동 시간만 설정 가능
+                vibrator.vibrate(50)
+            }
+
             val intent = Intent(context, FavoriteActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             context.startActivity(intent)
@@ -140,7 +161,15 @@ fun BottomNavigationBar() {
             )
         }
         IconButton(
-            onClick = {
+            onClick = {val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                    vibrator.vibrate(vibrationEffect)
+                } else {
+                    // API 26 미만에서는 진동 시간만 설정 가능
+                    vibrator.vibrate(50)
+                }
+
                 requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
 
             },
@@ -160,6 +189,15 @@ fun BottomNavigationBar() {
             )
         }
         IconButton(onClick = {
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                vibrator.vibrate(vibrationEffect)
+            } else {
+                // API 26 미만에서는 진동 시간만 설정 가능
+                vibrator.vibrate(50)
+            }
+
             val intent = Intent(context, MapActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             context.startActivity(intent)
@@ -173,6 +211,15 @@ fun BottomNavigationBar() {
             )
         }
         IconButton(onClick = {
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                vibrator.vibrate(vibrationEffect)
+            } else {
+                // API 26 미만에서는 진동 시간만 설정 가능
+                vibrator.vibrate(50)
+            }
+
             val intent = Intent(context, LanguageSwitchActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             context.startActivity(intent)
