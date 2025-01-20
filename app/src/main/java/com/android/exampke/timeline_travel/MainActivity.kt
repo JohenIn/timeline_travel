@@ -1,5 +1,6 @@
 package com.android.exampke.timeline_travel
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -28,8 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(Color.White),
                     topBar = {
-                        TopBar()
+                        HomeTopBar()
                     },
                     bottomBar = {
                         BottomNavigationBar()
@@ -86,6 +86,92 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     modifier: Modifier
 ) {
+    Column(
+        modifier = modifier
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorResource(R.color.theme_main_blue))
+                .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+        ) {
+            HomeCameraButton()
+            HomeAlbumButton()
+        }
+        SectionTitle(R.string.trending_landmark)
+        Row(
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState())
+        ) {
+            val randomLandmarks = getLandmarks().shuffled().take(5)
+            randomLandmarks.forEach { landmark ->
+                TrendLandmark(
+                    landmark = landmark
+                )
+            }
+            Spacer(modifier = Modifier.width(15.dp))
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        SectionTitle(R.string.nearby_landmark)
+        Row(
+            modifier = Modifier
+                .horizontalScroll(
+                    rememberScrollState()
+                )
+                .weight(1f)
+                .padding(end = 15.dp)
+        ) {
+            RegionalLandmark(
+                R.string.region0_name, R.drawable.korea_sudokwon, listOf("서울", "Seoul", "ソウル","인천", "Incheon", "仁川","경기", "Gyeonggi", "京畿",)
+            )
+            RegionalLandmark(
+                R.string.region1_name, R.drawable.korea_chungchung, listOf("충청", "Chungcheong", "忠清","대전", "Daejeon", "大田",)
+            )
+            RegionalLandmark(
+                R.string.region2_name, R.drawable.korea_gangwon, listOf("강원", "Gangwon", "江原",)
+            )
+            RegionalLandmark(
+                R.string.region3_name, R.drawable.korea_gyungsang, listOf("경상", "Gyeongsang", "慶尚","부산", "Busan", "釜山","대구", "Daegu", "大邱","울산", "Ulsan", "蔚山",)
+            )
+            RegionalLandmark(
+                R.string.region4_name, R.drawable.korea_jullla, listOf("전라", "Jeolla", "全羅","광주", "Gwangju", "光州","제주", "Jeju", "済州",)
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeAlbumButton() {
+    val context = LocalContext.current
+
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                val intent = Intent(context, LoadAlbumImageActivity::class.java)
+                intent.putExtra("selectedImageUri", uri.toString())
+                context.startActivity(intent)
+            }
+        }
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
+        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }) {
+        Icon(
+            painter = painterResource(id = R.drawable.icon_album),
+            contentDescription = "album",
+            tint = Color.White,
+            modifier = Modifier.scale(1.2f)
+        )
+        Text(
+            stringResource(R.string.open_album),
+            color = Color.White,
+            fontSize = 12.sp
+        )
+    }
+}
+
+@Composable
+private fun HomeCameraButton() {
     val context = LocalContext.current
     var capturedBitmap: Bitmap? by remember { mutableStateOf(null) }
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -120,117 +206,21 @@ fun MainScreen(
             Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
     }
-    val pickMedia =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                val intent = Intent(context, LoadAlbumImageActivity::class.java)
-                intent.putExtra("selectedImageUri", uri.toString())
-                context.startActivity(intent)
-            }
-        }
 
-    Column(
-        modifier = modifier
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 20.dp)
-        ) {
-            Button(
-                onClick = {
-                    requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                },
-                colors = ButtonDefaults.buttonColors(Color.Transparent),
-                modifier = Modifier
-                    .height(50.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_camera),
-                    contentDescription = "camera",
-                    tint = colorResource(R.color.theme_main_blue)
-                )
-                Text(
-                    stringResource(R.string.open_camera),
-                    color = colorResource(R.color.theme_main_blue)
-                )
-            }
-            Button(
-                onClick = {
-                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                },
-                colors = ButtonDefaults.buttonColors(Color.Transparent),
-                modifier = Modifier.height(50.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_album),
-                    contentDescription = "album",
-                    tint = colorResource(R.color.theme_main_blue)
-                )
-                Text(
-                    stringResource(R.string.open_album),
-                    color = colorResource(R.color.theme_main_blue)
-                )
-            }
-        }
-        SectionTitle(R.string.trending_landmark)
-        Row(
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-        ) {
-            val randomLandmarks = getLandmarks().shuffled().take(5)
-            randomLandmarks.forEach { landmark ->
-                TrendLandmark(
-                    landmark = landmark
-                )
-            }
-            Spacer(modifier = Modifier.width(15.dp))
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        SectionTitle(R.string.nearby_landmark)
-        Row(
-            modifier = Modifier
-                .horizontalScroll(
-                    rememberScrollState()
-                )
-                .weight(1f)
-                .padding(end = 15.dp)
-        ) {
-            RegionalLandmark(
-                R.string.region0_name, R.drawable.korea_sudokwon, listOf(
-                    "서울", "Seoul", "ソウル",
-                    "인천", "Incheon", "仁川",
-                    "경기", "Gyeonggi", "京畿",
-                )
-            )
-            RegionalLandmark(
-                R.string.region1_name, R.drawable.korea_chungchung, listOf(
-                    "충청", "Chungcheong", "忠清",
-                    "대전", "Daejeon", "大田",
-                )
-            )
-            RegionalLandmark(
-                R.string.region2_name, R.drawable.korea_gangwon, listOf(
-                    "강원", "Gangwon", "江原",
-                )
-            )
-            RegionalLandmark(
-                R.string.region3_name, R.drawable.korea_gyungsang, listOf(
-                    "경상", "Gyeongsang", "慶尚",
-                    "부산", "Busan", "釜山",
-                    "대구", "Daegu", "大邱",
-                    "울산", "Ulsan", "蔚山",
-                )
-            )
-            RegionalLandmark(
-                R.string.region4_name, R.drawable.korea_jullla, listOf(
-                    "전라", "Jeolla", "全羅",
-                    "광주", "Gwangju", "光州",
-                    "제주", "Jeju", "済州",
-                )
-            )
-        }
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+    }) {
+        Icon(
+            painter = painterResource(id = R.drawable.icon_camera),
+            contentDescription = "camera",
+            tint = Color.White,
+            modifier = Modifier.scale(1.2f)
+        )
+        Text(
+            stringResource(R.string.open_camera),
+            color = Color.White,
+            fontSize = 12.sp
+        )
     }
 }
 

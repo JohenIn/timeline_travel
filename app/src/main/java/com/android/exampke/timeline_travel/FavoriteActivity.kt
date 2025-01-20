@@ -94,6 +94,7 @@ fun FavoriteScreen(modifier: Modifier) {
         ) {
             filteredLandmarks.forEach { landmark ->
                 TrendLandmark(landmark)
+                Spacer(modifier = Modifier.height(15.dp))
             }
         }
     }

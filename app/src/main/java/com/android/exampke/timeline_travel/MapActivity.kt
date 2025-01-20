@@ -40,6 +40,5 @@ fun MapScreen(modifier: Modifier) {
     ShowGoogleMap(mapViewModel = MapViewModel(), modifier = modifier
         .fillMaxSize()
     )
-
 }
 
