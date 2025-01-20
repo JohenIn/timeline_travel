@@ -18,4 +18,7 @@ interface SaveDataDao {
 
     @Delete
     fun delete(saveData: SaveData)
+
+    @Query("DELETE FROM SaveData WHERE landmarkName = :landmarkName")
+    fun deleteByName(landmarkName: String)
 }
