@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">timeline_travel</string>
+    <string name="app_name">KOINPO</string>
     <string name="splashscreen_subtitle">내 손 안의\n\nAI 한국 가이드</string>
     <string name="open_camera">"카메라 열기</string>
     <string name="open_album">앨범 열기</string>

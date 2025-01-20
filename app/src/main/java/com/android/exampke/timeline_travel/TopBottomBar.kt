@@ -54,20 +54,31 @@ import coil3.Bitmap
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopBar() {
-    TopAppBar(
+    TopAppBar(modifier = Modifier
+        .drawBehind {
+        // 하단 Border 그리기
+        drawLine(
+            color = Color(0xFF6494FF),
+            start = Offset(0f, size.height), // 시작점 (좌측 하단)
+            end = Offset(size.width, size.height), // 끝점 (우측 하단)
+            strokeWidth = 1.dp.toPx() // Border 두께
+        )
+    },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFFE2E2E2),
-            titleContentColor = colorResource(R.color.theme_main_blue),
+            containerColor = Color.White,
         ), title = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    stringResource(R.string.app_name),
-                    color = colorResource(R.color.theme_main_blue)
+                Icon(
+                    painter = painterResource(R.drawable.koinpotextlogo),
+                    contentDescription = "koinpo",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .scale(0.3f)
                 )
             }
         }
@@ -96,19 +107,6 @@ fun BottomNavigationBar() {
                 )
             }
     ) {
-
-        val context = LocalContext.current
-
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        val vibrate: () -> Unit = {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect =
-                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
-                vibrator.vibrate(vibrationEffect)
-            } else {
-                vibrator.vibrate(50)
-            }
-        }
         BottomNaviButton(
             icon = R.drawable.icon_home,
             buttonName = R.string.home,
@@ -117,19 +115,6 @@ fun BottomNavigationBar() {
             currentActivity = "MainActivity",
             destination = MainActivity::class.java
         )
-//        IconButton(onClick = {
-//            vibrate()
-//            val intent = Intent(context, FavoriteActivity::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-//            context.startActivity(intent)
-//        }) {
-//            Icon(
-//                painter = painterResource(R.drawable.icon_favorite),
-//                contentDescription = "Favorite",
-//                modifier = Modifier.scale(0.8f),
-//                tint = if (currentActivityName == "FavoriteActivity") Color.Unspecified else Color.Gray
-//            )
-//        }
         BottomFavButton(
             icon = R.drawable.icon_favorite,
             buttonName = R.string.favorite,
@@ -138,9 +123,7 @@ fun BottomNavigationBar() {
             currentActivity = "FavoriteActivity",
             destination = FavoriteActivity::class.java
         )
-
-        BottomCameraButton(vibrate)
-
+        BottomCameraButton()
         BottomNaviButton(
             icon = R.drawable.icon_map,
             buttonName = R.string.map,
@@ -162,11 +145,9 @@ fun BottomNavigationBar() {
 
 @Composable
 private fun BottomCameraButton(
-    vibrate: () -> Unit,
 ) {
     val context = LocalContext.current
     var capturedBitmap: Bitmap? by remember { mutableStateOf(null) }
-
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -185,7 +166,6 @@ private fun BottomCameraButton(
             }
         }
     }
-
     // 카메라
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -197,6 +177,16 @@ private fun BottomCameraButton(
         } else {
             // 권한이 거부되면 Toast로 메시지 표시
             Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    val vibrate: () -> Unit = {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val vibrationEffect =
+                VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
+            vibrator.vibrate(vibrationEffect)
+        } else {
+            vibrator.vibrate(50)
         }
     }
     IconButton(

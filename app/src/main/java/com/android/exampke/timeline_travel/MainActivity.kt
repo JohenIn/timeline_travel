@@ -197,29 +197,39 @@ fun MainScreen(
                 .weight(1f)
                 .padding(end = 15.dp)
         ) {
-            RegionalLandmark(R.string.region0_name, R.drawable.korea_sudokwon, listOf(
-                "서울", "Seoul", "ソウル",
-                "인천", "Incheon", "仁川",
-                "경기", "Gyeonggi", "京畿",
-            ))
-            RegionalLandmark(R.string.region1_name, R.drawable.korea_chungchung, listOf(
-                "충청", "Chungcheong", "忠清",
-                "대전", "Daejeon", "大田",
-            ))
-            RegionalLandmark(R.string.region2_name, R.drawable.korea_gangwon, listOf(
-                "강원", "Gangwon", "江原",
-            ))
-            RegionalLandmark(R.string.region3_name, R.drawable.korea_gyungsang, listOf(
-                "경상", "Gyeongsang", "慶尚",
-                "부산", "Busan", "釜山",
-                "대구", "Daegu", "大邱",
-                "울산", "Ulsan", "蔚山",
-            ))
-            RegionalLandmark(R.string.region4_name, R.drawable.korea_jullla, listOf(
-                "전라", "Jeolla", "全羅",
-                "광주", "Gwangju", "光州",
-                "제주", "Jeju", "済州",
-            ))
+            RegionalLandmark(
+                R.string.region0_name, R.drawable.korea_sudokwon, listOf(
+                    "서울", "Seoul", "ソウル",
+                    "인천", "Incheon", "仁川",
+                    "경기", "Gyeonggi", "京畿",
+                )
+            )
+            RegionalLandmark(
+                R.string.region1_name, R.drawable.korea_chungchung, listOf(
+                    "충청", "Chungcheong", "忠清",
+                    "대전", "Daejeon", "大田",
+                )
+            )
+            RegionalLandmark(
+                R.string.region2_name, R.drawable.korea_gangwon, listOf(
+                    "강원", "Gangwon", "江原",
+                )
+            )
+            RegionalLandmark(
+                R.string.region3_name, R.drawable.korea_gyungsang, listOf(
+                    "경상", "Gyeongsang", "慶尚",
+                    "부산", "Busan", "釜山",
+                    "대구", "Daegu", "大邱",
+                    "울산", "Ulsan", "蔚山",
+                )
+            )
+            RegionalLandmark(
+                R.string.region4_name, R.drawable.korea_jullla, listOf(
+                    "전라", "Jeolla", "全羅",
+                    "광주", "Gwangju", "光州",
+                    "제주", "Jeju", "済州",
+                )
+            )
         }
     }
 }
@@ -228,7 +238,7 @@ fun MainScreen(
 fun SectionTitle(topic: Int) {
     Text(
         stringResource(topic),
-        fontSize = 25.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.ExtraBold,
         lineHeight = 50.sp,
         modifier = Modifier.padding(start = 15.dp)
@@ -264,6 +274,7 @@ fun TrendLandmark(landmark: Landmark) {
                     RoundedCornerShape(20.dp)
                 ),
         )
+        Spacer(modifier = Modifier.height(5.dp))
         Text(
             landmark.name,
             lineHeight = 20.sp,
@@ -271,7 +282,13 @@ fun TrendLandmark(landmark: Landmark) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 5.dp)
         )
-        Text(landmark.location, lineHeight = 20.sp, modifier = Modifier.padding(start = 5.dp), color = Color.DarkGray)
+        Text(
+            landmark.location,
+            lineHeight = 20.sp,
+            modifier = Modifier.padding(start = 5.dp),
+            color = Color.Gray,
+            fontSize = 15.sp
+        )
     }
 }
 
@@ -305,7 +322,9 @@ fun RegionalLandmark(region: Int, map: Int, regionFilters: List<String>) {
         Image(
             painter = painterResource(id = map),
             contentDescription = "seoul",
-            modifier = Modifier.align(alignment = Alignment.Center).padding(bottom = 20.dp)
+            modifier = Modifier
+                .align(alignment = Alignment.Center)
+                .padding(bottom = 20.dp)
         )
         Text(
             stringResource(region),
