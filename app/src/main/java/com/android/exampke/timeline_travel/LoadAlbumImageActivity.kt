@@ -45,7 +45,7 @@ class LoadAlbumImageActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     LoadAlbumImageScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding).background(Color.White)
                     )
                 }
             }
@@ -63,7 +63,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(horizontal = 10.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Row() {

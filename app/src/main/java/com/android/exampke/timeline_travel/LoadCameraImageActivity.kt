@@ -45,7 +45,7 @@ class LoadCameraImageActivity : ComponentActivity() {
                 ) { innerPadding ->
                     val capturedBitmap = intent.getParcelableExtra<Bitmap>("capturedImageBitmap")
                     LoadCameraImageScreen(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.padding(innerPadding).background(Color.White),
                         capturedBitmap = capturedBitmap // 전달받은 Bitmap을 화면에 전달
                     )
                 }
@@ -60,7 +60,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(horizontal = 10.dp)
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Row() {

@@ -6,12 +6,15 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -41,7 +44,7 @@ class LanguageSwitchActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     LanguageSwitchScreen(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.padding(innerPadding).background(Color.White),
                         onLanguageSelected = { languageCode ->
                             // 언어 변경 후 앱 재시작
                             setLocale(this, languageCode)
@@ -68,12 +71,15 @@ fun LanguageSwitchScreen(
     onLanguageSelected: (String) -> Unit // 언어 선택 콜백
 ) {
     Column(
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize().
         padding(horizontal = 50.dp)
     ) {
-        Text(stringResource(R.string.select_language))
+        Spacer(modifier = Modifier.height( 50.dp))
+
+        SectionTitle(R.string.select_language)
+        Spacer(modifier = Modifier.height( 50.dp))
         Row(horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()) {
             // 한국어 버튼

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
-import com.android.exampke.timeline_travel.landmarks
+import com.android.exampke.timeline_travel.getLandmarks
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -73,28 +73,13 @@ fun ShowGoogleMap(mapViewModel: MapViewModel, modifier: Modifier) {
             Timber.e("Location permission was denied by the user.")
         }
     }
-    // 랜드마크 리스트 정의
-//    val landmarks = listOf(
-//        LatLng(37.5511694, 126.9882266) to "Namsan Tower", // 남산타워
-//        LatLng(37.5194207, 126.9404655) to "63 Building"   // 63빌딩
-//    )
 
-//    // google map url로 넣기
-//    val placesUrls = listOf(
-//        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5710015!4d126.9769419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "Namsan Tower",
-//        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5740015!4d126.9799419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "63 Building",
-//        "https://www.google.co.kr/maps/place/%EC%9D%B4%EC%88%9C%EC%8B%A0+%EC%9E%A5%EA%B5%B0+%EB%8F%99%EC%83%81/data=!3m1!4b1!4m6!3m5!1s0x357ca2ec98800045:0xdd5786518f45a705!8m2!3d37.5790015!4d126.9829419!16s%2Fg%2F11g6rkhdqc?entry=ttu" to "Dongdaemun Design Plaza"
-//    )
+    val landmarks = getLandmarks()
 
     // Step 1: Extract `googleMapUrl` and `name` from `landmarks`
     val placesUrls = landmarks.map { landmark ->
         landmark.googleMapUrl to landmark.name
     }
-
-//// Step 2: Print the resulting `placesUrls` list to verify
-//    placesUrls.forEach { (url, name) ->
-//        println("URL: $url, Name: $name")
-//    }
 
     val markers = remember { mutableStateOf<List<Pair<LatLng, String>>>(emptyList()) }
 
