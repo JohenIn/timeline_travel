@@ -1,6 +1,9 @@
+@file:Suppress("DEPRECATION")
+
 package com.android.exampke.timeline_travel
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -165,6 +168,7 @@ fun BottomNavigationBar() {
     }
 }
 
+@SuppressLint("ObsoleteSdkInt")
 @Composable
 private fun BottomCameraButton(
 ) {
@@ -233,6 +237,7 @@ private fun BottomCameraButton(
     }
 }
 
+@SuppressLint("ObsoleteSdkInt")
 @Composable
 private fun BottomNaviButton(
     icon: Int,
@@ -276,6 +281,7 @@ private fun BottomNaviButton(
     }
 }
 
+@SuppressLint("ObsoleteSdkInt")
 @Composable
 private fun BottomFavButton(
     icon: Int,
