@@ -56,7 +56,12 @@ fun TopBar() {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
-            ) { Text(stringResource(R.string.app_name), color = colorResource(R.color.theme_main_blue)) }
+            ) {
+                Text(
+                    stringResource(R.string.app_name),
+                    color = colorResource(R.color.theme_main_blue)
+                )
+            }
         }
     )
 }
@@ -121,7 +126,8 @@ fun BottomNavigationBar() {
         IconButton(onClick = {
             val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                val vibrationEffect =
+                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
                 vibrator.vibrate(vibrationEffect)
             } else {
                 // API 26 미만에서는 진동 시간만 설정 가능
@@ -142,7 +148,8 @@ fun BottomNavigationBar() {
         IconButton(onClick = {
             val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                val vibrationEffect =
+                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
                 vibrator.vibrate(vibrationEffect)
             } else {
                 // API 26 미만에서는 진동 시간만 설정 가능
@@ -161,9 +168,13 @@ fun BottomNavigationBar() {
             )
         }
         IconButton(
-            onClick = {val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            onClick = {
+                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                    val vibrationEffect = VibrationEffect.createOneShot(
+                        50,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    ) // 100ms 진동
                     vibrator.vibrate(vibrationEffect)
                 } else {
                     // API 26 미만에서는 진동 시간만 설정 가능
@@ -191,7 +202,8 @@ fun BottomNavigationBar() {
         IconButton(onClick = {
             val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                val vibrationEffect =
+                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
                 vibrator.vibrate(vibrationEffect)
             } else {
                 // API 26 미만에서는 진동 시간만 설정 가능
@@ -213,7 +225,8 @@ fun BottomNavigationBar() {
         IconButton(onClick = {
             val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect = VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                val vibrationEffect =
+                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
                 vibrator.vibrate(vibrationEffect)
             } else {
                 // API 26 미만에서는 진동 시간만 설정 가능

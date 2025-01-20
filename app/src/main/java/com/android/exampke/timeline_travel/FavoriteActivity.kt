@@ -44,13 +44,15 @@ class FavoriteActivity : ComponentActivity() {
         setContent {
             Timeline_travelTheme {
                 Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
                     topBar = {
                         TopBar()
                     },
                     bottomBar = {
                         BottomNavigationBar()
                     },
-                    modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     FavoriteScreen(
                         modifier = Modifier
@@ -65,45 +67,42 @@ class FavoriteActivity : ComponentActivity() {
 
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
-    val landmarks = getLandmarks()
+    // getLandmarks 호출은 remember 외부에서 수행
+    val landmarksList = getLandmarks()
 
-    // 즐겨찾기 상태를 관리하는 리스트
-    val favoriteLandmarks = remember { mutableStateListOf<Landmark>() }
-
-    // 랜드마크 리스트에서 즐겨찾기만 필터링
-    val favoriteItems = remember { landmarks.filter { it.isFavorited } }
+    // landmarksList를 mutableStateListOf로 변환하여 상태 관리
+    val landmarks = remember { mutableStateListOf(*landmarksList.toTypedArray()) }
 
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             SectionTitle(R.string.favorite_landmark)
         }
         // 리스트 항목 반복문
+        val favoriteLandmarks = landmarks.filter { it.isFavorited }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            favoriteItems.forEach { landmark ->
+            favoriteLandmarks.forEach { landmark ->
                 FavoriteLandmark(
                     landmark = landmark,
                     onFavoriteChanged = { updatedLandmark ->
+                        val index = landmarks.indexOfFirst { it.name == updatedLandmark.name }
                         // 즐겨찾기 상태 변경 시 리스트 갱신
-                        if (updatedLandmark.isFavorited) {
-                            if (!favoriteLandmarks.contains(updatedLandmark)) {
-                                favoriteLandmarks.add(updatedLandmark)
-                            }
-                        } else {
-                            favoriteLandmarks.remove(updatedLandmark)
+                        if (index != -1) {
+                            landmarks[index] = updatedLandmark.copy(
+                                isFavorited = !updatedLandmark.isFavorited
+                            )
                         }
                     }
                 )
@@ -146,7 +145,6 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
                 .size(20.dp) // 아이콘 크기 설정
                 .clickable {
                     // 즐겨찾기 상태 변경
-                    landmark.isFavorited = !landmark.isFavorited
                     onFavoriteChanged(landmark) // 변경된 상태 반영
                 }
         )
