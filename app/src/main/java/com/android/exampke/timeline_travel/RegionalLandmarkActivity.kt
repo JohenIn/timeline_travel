@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +53,8 @@ class RegionalLandmarkActivity : ComponentActivity() {
 
 @Composable
 fun RegionalLandmarkScreen(modifier: Modifier, filteredLandmarks: List<Landmark>, region: Int) {
-    Column(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxSize()) {
 
         Row() {
             SectionTitle(R.string.nearby_landmark)
@@ -64,9 +66,16 @@ fun RegionalLandmarkScreen(modifier: Modifier, filteredLandmarks: List<Landmark>
             )
             SectionTitle(region)
         }
-        filteredLandmarks?.forEach { landmark ->
-            TrendLandmark(landmark = landmark)
-            Spacer(modifier = Modifier.height(15.dp))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            filteredLandmarks?.forEach { landmark ->
+                TrendLandmark(landmark = landmark)
+                Spacer(modifier = Modifier.height(15.dp))
+            }
         }
     }
 }
