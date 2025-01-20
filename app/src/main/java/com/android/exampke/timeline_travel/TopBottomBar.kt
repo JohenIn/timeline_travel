@@ -49,6 +49,32 @@ import coil3.Bitmap
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
+fun HomeTopBar() {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = colorResource(R.color.theme_main_blue),
+        ), title = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.koinpotextlogo_main),
+                    contentDescription = "koinpo",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .scale(0.3f)
+                )
+            }
+        }
+    )
+}
+
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun TopBar() {
     TopAppBar(modifier = Modifier
         .drawBehind {

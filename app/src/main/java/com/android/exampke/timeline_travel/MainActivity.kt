@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(Color.White),
                     topBar = {
-                        TopBar()
+                        HomeTopBar()
                     },
                     bottomBar = {
                         BottomNavigationBar()
@@ -136,41 +137,38 @@ fun MainScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 20.dp)
+                .background(colorResource(R.color.theme_main_blue))
+                .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
         ) {
-            Button(
-                onClick = {
-                    requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                },
-                colors = ButtonDefaults.buttonColors(Color.Transparent),
-                modifier = Modifier
-                    .height(50.dp)
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.clickable {
+                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_camera),
                     contentDescription = "camera",
-                    tint = colorResource(R.color.theme_main_blue)
+                    tint = Color.White,
+                    modifier = Modifier.scale(1.2f)
                 )
                 Text(
                     stringResource(R.string.open_camera),
-                    color = colorResource(R.color.theme_main_blue)
+                    color = Color.White,
+                    fontSize = 12.sp
                 )
             }
-            Button(
-                onClick = {
-                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                },
-                colors = ButtonDefaults.buttonColors(Color.Transparent),
-                modifier = Modifier.height(50.dp)
-            ) {
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.clickable {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_album),
                     contentDescription = "album",
-                    tint = colorResource(R.color.theme_main_blue)
+                    tint = Color.White,
+                    modifier = Modifier.scale(1.2f)
                 )
                 Text(
                     stringResource(R.string.open_album),
-                    color = colorResource(R.color.theme_main_blue)
+                    color = Color.White,
+                    fontSize = 12.sp
                 )
             }
         }
