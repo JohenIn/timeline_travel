@@ -71,6 +71,10 @@ fun FavoriteScreen(modifier: Modifier) {
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
     val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
+    val landmarkList = getLandmarks()
+    val filteredLandmarks = landmarkList.filter { landmark ->
+        saveList.value.any { it.landmarkName == landmark.name }
+    }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -91,11 +95,8 @@ fun FavoriteScreen(modifier: Modifier) {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            saveList.value.forEachIndexed { index, item ->
-                Text(
-                    text = item.landmarkName,
-                    fontSize = 15.sp,
-                )
+            filteredLandmarks.forEach { landmark ->
+                TrendLandmark(landmark)
             }
         }
     }
