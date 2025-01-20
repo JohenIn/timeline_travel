@@ -23,7 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,11 +67,13 @@ class FavoriteActivity : ComponentActivity() {
 
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
-    // getLandmarks 호출은 remember 외부에서 수행
-    val landmarksList = getLandmarks()
-
-    // landmarksList를 mutableStateListOf로 변환하여 상태 관리
-    val landmarks = remember { mutableStateListOf(*landmarksList.toTypedArray()) }
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
+    val landmarkList = getLandmarks()
+    val filteredLandmarks = landmarkList.filter { landmark ->
+        saveList.value.any { it.landmarkName == landmark.name }
+    }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -84,32 +86,19 @@ fun FavoriteScreen(modifier: Modifier) {
         ) {
             SectionTitle(R.string.favorite_landmark)
         }
-        // 리스트 항목 반복문
-        val favoriteLandmarks = landmarks.filter { it.isFavorited }
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            favoriteLandmarks.forEach { landmark ->
-                FavoriteLandmark(
-                    landmark = landmark,
-                    onFavoriteChanged = { updatedLandmark ->
-                        val index = landmarks.indexOfFirst { it.name == updatedLandmark.name }
-                        // 즐겨찾기 상태 변경 시 리스트 갱신
-                        if (index != -1) {
-                            landmarks[index] = updatedLandmark.copy(
-                                isFavorited = !updatedLandmark.isFavorited
-                            )
-                        }
-                    }
-                )
+            filteredLandmarks.forEach { landmark ->
+                TrendLandmark(landmark)
             }
         }
     }
 }
+
 
 @Composable
 private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -> Unit) {
@@ -130,7 +119,7 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
                     val intent = Intent(context, LandmarkDetailActivity::class.java).apply {
-                        putExtra("landmark", landmark) // Landmark 객체 전달
+                        putExtra("landmark", landmark)
                     }
                     context.startActivity(intent)
                 },
@@ -139,13 +128,12 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
         Text(landmark.location, lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
         Icon(
             painter = painterResource(R.drawable.icon_favorite),
-            tint = if (landmark.isFavorited) Color.Unspecified else Color.Gray, // 색상 변경
+            tint =  Color.Unspecified ,
             contentDescription = "Favorite",
             modifier = Modifier
-                .size(20.dp) // 아이콘 크기 설정
+                .size(20.dp)
                 .clickable {
-                    // 즐겨찾기 상태 변경
-                    onFavoriteChanged(landmark) // 변경된 상태 반영
+                    onFavoriteChanged(landmark)
                 }
         )
         Spacer(modifier = Modifier.height(50.dp))
