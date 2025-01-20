@@ -49,4 +49,13 @@
     <string name="index18_location">Suyeong-gu, Busan</string>
     <string name="index19_name">Yeongdo Bridge</string>
     <string name="index19_location">Jung-gu, Busan</string>
+    <string name="region0_name">Capital Area</string>
+    <string name="region1_name">Chungcheong Province</string>
+    <string name="region2_name">Gangwon Province</string>
+    <string name="region3_name">Gyeongsang Province</string>
+    <string name="region4_name">Jeolla Province</string>
+    <string name="home">HOME</string>
+    <string name="favorite">FAVORITE</string>
+    <string name="map">MAP</string>
+    <string name="language">LANGUAGE</string>
 </resources>

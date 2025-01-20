@@ -49,4 +49,13 @@
     <string name="index18_location">Quận Suyeong, Busan</string>
     <string name="index19_name">Cầu Yeongdo</string>
     <string name="index19_location">Quận Jung, Busan</string>
+    <string name="region0_name">Vùng đô thị</string>
+    <string name="region1_name">Tỉnh Chungcheong</string>
+    <string name="region2_name">Tỉnh Gangwon</string>
+    <string name="region3_name">Tỉnh Gyeongsang</string>
+    <string name="region4_name">Tỉnh Jeolla</string>
+    <string name="home">TRANG</string>
+    <string name="favorite">THÍCH</string>
+    <string name="map">BẢN</string>
+    <string name="language">NGỮ</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.android.exampke.timeline_travel
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -7,15 +8,21 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +47,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.Bitmap
 
 
@@ -88,161 +96,213 @@ fun BottomNavigationBar() {
                 )
             }
     ) {
+
         val context = LocalContext.current
-        var capturedBitmap: Bitmap? by remember { mutableStateOf(null) }
 
-        val cameraLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                // 카메라 앱에서 받은 Bitmap을 처리
-                val bitmap = result.data?.extras?.getParcelable<Bitmap>("data")
-                if (bitmap != null) {
-                    capturedBitmap = bitmap // Bitmap을 상태에 저장
-
-                    // Intent로 Bitmap 전달
-                    val intent = Intent(context, LoadCameraImageActivity::class.java)
-                    intent.putExtra("capturedImageBitmap", capturedBitmap) // Bitmap을 Intent에 전달
-                    context.startActivity(intent)
-                } else {
-                    Toast.makeText(context, "사진을 저장하지 못했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        // 카메라
-        val requestPermissionLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-            if (isGranted) {
-                // 권한이 허락되면 카메라 실행
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                cameraLauncher.launch(intent)
-            } else {
-                // 권한이 거부되면 Toast로 메시지 표시
-                Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        IconButton(onClick = {
-            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrate: () -> Unit = {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 val vibrationEffect =
-                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
+                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
                 vibrator.vibrate(vibrationEffect)
             } else {
-                // API 26 미만에서는 진동 시간만 설정 가능
                 vibrator.vibrate(50)
             }
-
-            val intent = Intent(context, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            context.startActivity(intent)
-        }) {
-            Icon(
-                painter = painterResource(R.drawable.icon_home),
-                contentDescription = "Home",
-                modifier = Modifier.scale(0.8f),
-                tint = if (currentActivityName == "MainActivity") colorResource(R.color.theme_sub_blue) else Color.Gray
-            )
         }
-        IconButton(onClick = {
-            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect =
-                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
-                vibrator.vibrate(vibrationEffect)
+        BottomNaviButton(
+            icon = R.drawable.icon_home,
+            buttonName = R.string.home,
+            context,
+            currentActivityName,
+            currentActivity = "MainActivity",
+            destination = MainActivity::class.java
+        )
+//        IconButton(onClick = {
+//            vibrate()
+//            val intent = Intent(context, FavoriteActivity::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+//            context.startActivity(intent)
+//        }) {
+//            Icon(
+//                painter = painterResource(R.drawable.icon_favorite),
+//                contentDescription = "Favorite",
+//                modifier = Modifier.scale(0.8f),
+//                tint = if (currentActivityName == "FavoriteActivity") Color.Unspecified else Color.Gray
+//            )
+//        }
+        BottomFavButton(
+            icon = R.drawable.icon_favorite,
+            buttonName = R.string.favorite,
+            context,
+            currentActivityName,
+            currentActivity = "FavoriteActivity",
+            destination = FavoriteActivity::class.java
+        )
+
+        BottomCameraButton(vibrate)
+
+        BottomNaviButton(
+            icon = R.drawable.icon_map,
+            buttonName = R.string.map,
+            context,
+            currentActivityName,
+            currentActivity = "MapActivity",
+            destination = MapActivity::class.java
+        )
+        BottomNaviButton(
+            icon = R.drawable.icon_language,
+            buttonName = R.string.language,
+            context,
+            currentActivityName,
+            currentActivity = "LanguageSwitchActivity",
+            destination = LanguageSwitchActivity::class.java
+        )
+    }
+}
+
+@Composable
+private fun BottomCameraButton(
+    vibrate: () -> Unit,
+) {
+    val context = LocalContext.current
+    var capturedBitmap: Bitmap? by remember { mutableStateOf(null) }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // 카메라 앱에서 받은 Bitmap을 처리
+            val bitmap = result.data?.extras?.getParcelable<Bitmap>("data")
+            if (bitmap != null) {
+                capturedBitmap = bitmap // Bitmap을 상태에 저장
+
+                // Intent로 Bitmap 전달
+                val intent = Intent(context, LoadCameraImageActivity::class.java)
+                intent.putExtra("capturedImageBitmap", capturedBitmap) // Bitmap을 Intent에 전달
+                context.startActivity(intent)
             } else {
-                // API 26 미만에서는 진동 시간만 설정 가능
-                vibrator.vibrate(50)
+                Toast.makeText(context, "사진을 저장하지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
-
-            val intent = Intent(context, FavoriteActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            context.startActivity(intent)
-        }) {
-            Icon(
-                painter = painterResource(R.drawable.icon_favorite),
-                contentDescription = "Favorite",
-                modifier = Modifier.scale(0.8f),
-                tint = if (currentActivityName == "FavoriteActivity") Color.Unspecified else Color.Gray
-            )
         }
-        IconButton(
-            onClick = {
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    val vibrationEffect = VibrationEffect.createOneShot(
-                        50,
-                        VibrationEffect.DEFAULT_AMPLITUDE
-                    ) // 100ms 진동
-                    vibrator.vibrate(vibrationEffect)
-                } else {
-                    // API 26 미만에서는 진동 시간만 설정 가능
-                    vibrator.vibrate(50)
-                }
+    }
 
-                requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-
-            },
-            modifier = Modifier
-                .scale(1.5f)
-                .padding(bottom = 0.dp)
-                .background(
-                    color = colorResource(R.color.theme_main_blue), // 배경색
-                    shape = CircleShape // 원형 배경
-                )
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.icon_camera),
-                contentDescription = "Camera",
-                tint = Color.White, // 아이콘 색상: 흰색
-                modifier = Modifier.padding(bottom = 5.dp)
-            )
+    // 카메라
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // 권한이 허락되면 카메라 실행
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraLauncher.launch(intent)
+        } else {
+            // 권한이 거부되면 Toast로 메시지 표시
+            Toast.makeText(context, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
-        IconButton(onClick = {
-            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect =
-                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
-                vibrator.vibrate(vibrationEffect)
-            } else {
-                // API 26 미만에서는 진동 시간만 설정 가능
-                vibrator.vibrate(50)
-            }
-
-            val intent = Intent(context, MapActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            context.startActivity(intent)
-
-        }) {
-            Icon(
-                painter = painterResource(R.drawable.icon_map),
-                tint = if (currentActivityName == "MapActivity") colorResource(R.color.theme_sub_blue) else Color.Gray,
-                contentDescription = "Map",
-                modifier = Modifier.scale(0.8f)
+    }
+    IconButton(
+        onClick = {
+            vibrate()
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        },
+        modifier = Modifier
+            .scale(1.5f)
+            .padding(bottom = 0.dp)
+            .background(
+                color = colorResource(R.color.theme_main_blue), // 배경색
+                shape = CircleShape // 원형 배경
             )
-        }
-        IconButton(onClick = {
-            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val vibrationEffect =
-                    VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE) // 100ms 진동
-                vibrator.vibrate(vibrationEffect)
-            } else {
-                // API 26 미만에서는 진동 시간만 설정 가능
-                vibrator.vibrate(50)
-            }
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.icon_camera),
+            contentDescription = "Camera",
+            tint = Color.White, // 아이콘 색상: 흰색
+            modifier = Modifier.padding(bottom = 5.dp)
+        )
+    }
+}
 
-            val intent = Intent(context, LanguageSwitchActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            context.startActivity(intent)
-        }) {
-            Icon(
-                painter = painterResource(R.drawable.icon_language),
-                tint = if (currentActivityName == "LanguageSwitchActivity") colorResource(R.color.theme_sub_blue) else Color.Gray,
-                contentDescription = "Language",
-                modifier = Modifier.scale(0.8f)
-            )
+@Composable
+private fun BottomNaviButton(
+    icon: Int,
+    buttonName: Int,
+    context: Context,
+    currentActivityName: String,
+    currentActivity: String,
+    destination: Class<out Activity>
+) {
+    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    val vibrate: () -> Unit = {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val vibrationEffect =
+                VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
+            vibrator.vibrate(vibrationEffect)
+        } else {
+            vibrator.vibrate(50)
         }
+    }
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable {
+                vibrate()
+                val intent = Intent(context, destination)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                context.startActivity(intent)
+            }) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = "Home",
+            modifier = Modifier.scale(0.7f),
+            tint = if (currentActivityName == currentActivity) colorResource(R.color.theme_sub_blue) else Color.Gray
+        )
+        Text(
+            stringResource(buttonName),
+            color = if (currentActivityName == currentActivity) colorResource(R.color.theme_sub_blue) else Color.Gray,
+            fontSize = 13.sp,
+            modifier = Modifier.offset(y = (-4).dp)
+        )
+    }
+}
+
+@Composable
+private fun BottomFavButton(
+    icon: Int,
+    buttonName: Int,
+    context: Context,
+    currentActivityName: String,
+    currentActivity: String,
+    destination: Class<out Activity>
+) {
+    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    val vibrate: () -> Unit = {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val vibrationEffect =
+                VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE)
+            vibrator.vibrate(vibrationEffect)
+        } else {
+            vibrator.vibrate(50)
+        }
+    }
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable {
+                vibrate()
+                val intent = Intent(context, destination)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                context.startActivity(intent)
+            }) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = "Home",
+            modifier = Modifier.scale(0.7f),
+            tint = if (currentActivityName == currentActivity) Color.Unspecified else Color.Gray
+        )
+        Text(
+            stringResource(buttonName),
+            color = if (currentActivityName == currentActivity) colorResource(R.color.theme_sub_blue) else Color.Gray,
+            fontSize = 13.sp,
+            modifier = Modifier.offset(y = (-4).dp)
+        )
     }
 }

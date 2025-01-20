@@ -48,4 +48,13 @@
     <string name="index18_location">부산시 수영구</string>
     <string name="index19_name">영도대교</string>
     <string name="index19_location">부산시 중구</string>
+    <string name="region0_name">수도권</string>
+    <string name="region1_name">충청도</string>
+    <string name="region2_name">강원도</string>
+    <string name="region3_name">경상도</string>
+    <string name="region4_name">전라도</string>
+    <string name="home">홈</string>
+    <string name="favorite">즐겨찾기</string>
+    <string name="map">지도</string>
+    <string name="language">언어</string>
 </resources>

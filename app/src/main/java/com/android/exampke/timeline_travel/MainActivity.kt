@@ -48,6 +48,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.Bitmap
@@ -196,11 +197,29 @@ fun MainScreen(
                 .weight(1f)
                 .padding(end = 15.dp)
         ) {
-            RegionalLandmark("수도권", R.drawable.korea_sudokwon, listOf("서울", "인천", "경기"))
-            RegionalLandmark("충청도", R.drawable.korea_chungchung, listOf("충청", "대전"))
-            RegionalLandmark("강원도", R.drawable.korea_gangwon, listOf("강원"))
-            RegionalLandmark("경상도", R.drawable.korea_gyungsang, listOf("경상", "부산", "대구", "울산"))
-            RegionalLandmark("전라도", R.drawable.korea_jullla, listOf("전라", "광주", "제주"))
+            RegionalLandmark(R.string.region0_name, R.drawable.korea_sudokwon, listOf(
+                "서울", "Seoul", "ソウル",
+                "인천", "Incheon", "仁川",
+                "경기", "Gyeonggi", "京畿",
+            ))
+            RegionalLandmark(R.string.region1_name, R.drawable.korea_chungchung, listOf(
+                "충청", "Chungcheong", "忠清",
+                "대전", "Daejeon", "大田",
+            ))
+            RegionalLandmark(R.string.region2_name, R.drawable.korea_gangwon, listOf(
+                "강원", "Gangwon", "江原",
+            ))
+            RegionalLandmark(R.string.region3_name, R.drawable.korea_gyungsang, listOf(
+                "경상", "Gyeongsang", "慶尚",
+                "부산", "Busan", "釜山",
+                "대구", "Daegu", "大邱",
+                "울산", "Ulsan", "蔚山",
+            ))
+            RegionalLandmark(R.string.region4_name, R.drawable.korea_jullla, listOf(
+                "전라", "Jeolla", "全羅",
+                "광주", "Gwangju", "光州",
+                "제주", "Jeju", "済州",
+            ))
         }
     }
 }
@@ -209,7 +228,7 @@ fun MainScreen(
 fun SectionTitle(topic: Int) {
     Text(
         stringResource(topic),
-        fontSize = 30.sp,
+        fontSize = 25.sp,
         fontWeight = FontWeight.ExtraBold,
         lineHeight = 50.sp,
         modifier = Modifier.padding(start = 15.dp)
@@ -237,7 +256,6 @@ fun TrendLandmark(landmark: Landmark) {
                         putExtra("landmark", landmark) // Landmark 객체 전달
                     }
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-
                     context.startActivity(intent)
                 }
                 .border(
@@ -248,17 +266,17 @@ fun TrendLandmark(landmark: Landmark) {
         )
         Text(
             landmark.name,
-            lineHeight = 30.sp,
-            fontSize = 20.sp,
+            lineHeight = 20.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 5.dp)
         )
-        Text(landmark.location, lineHeight = 20.sp, modifier = Modifier.padding(start = 5.dp))
+        Text(landmark.location, lineHeight = 20.sp, modifier = Modifier.padding(start = 5.dp), color = Color.DarkGray)
     }
 }
 
 @Composable
-fun RegionalLandmark(region: String, map: Int, regionFilters: List<String>) {
+fun RegionalLandmark(region: Int, map: Int, regionFilters: List<String>) {
     val context = LocalContext.current
     val filteredLandmarks = getLandmarks().filter { landmark ->
         regionFilters.any { filter -> landmark.location.contains(filter) }
@@ -287,16 +305,19 @@ fun RegionalLandmark(region: String, map: Int, regionFilters: List<String>) {
         Image(
             painter = painterResource(id = map),
             contentDescription = "seoul",
-            modifier = Modifier.align(alignment = Alignment.Center)
+            modifier = Modifier.align(alignment = Alignment.Center).padding(bottom = 20.dp)
         )
         Text(
-            region,
-            lineHeight = 30.sp,
-            fontSize = 20.sp,
+            stringResource(region),
+            lineHeight = 20.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.End,
+            color = Color.DarkGray,
             modifier = Modifier
                 .align(alignment = Alignment.BottomEnd)
                 .padding(end = 10.dp, bottom = 10.dp)
         )
     }
+    Spacer(modifier = Modifier.height(15.dp))
 }
