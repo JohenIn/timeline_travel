@@ -23,8 +23,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,11 +72,10 @@ class FavoriteActivity : ComponentActivity() {
 
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
-    // getLandmarks 호출은 remember 외부에서 수행
-    val landmarksList = getLandmarks()
-
-    // landmarksList를 mutableStateListOf로 변환하여 상태 관리
-    val landmarks = remember { mutableStateListOf(*landmarksList.toTypedArray()) }
+    //room
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -85,7 +89,6 @@ fun FavoriteScreen(modifier: Modifier) {
             SectionTitle(R.string.favorite_landmark)
         }
         // 리스트 항목 반복문
-        val favoriteLandmarks = landmarks.filter { it.isFavorited }
 
         Column(
             modifier = Modifier
@@ -93,18 +96,10 @@ fun FavoriteScreen(modifier: Modifier) {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            favoriteLandmarks.forEach { landmark ->
-                FavoriteLandmark(
-                    landmark = landmark,
-                    onFavoriteChanged = { updatedLandmark ->
-                        val index = landmarks.indexOfFirst { it.name == updatedLandmark.name }
-                        // 즐겨찾기 상태 변경 시 리스트 갱신
-                        if (index != -1) {
-                            landmarks[index] = updatedLandmark.copy(
-                                isFavorited = !updatedLandmark.isFavorited
-                            )
-                        }
-                    }
+            saveList.value.forEachIndexed { index, item ->
+                Text(
+                    text = "${item.landmarkName}",
+                    fontSize = 15.sp,
                 )
             }
         }
@@ -139,7 +134,7 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
         Text(landmark.location, lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
         Icon(
             painter = painterResource(R.drawable.icon_favorite),
-            tint = if (landmark.isFavorited) Color.Unspecified else Color.Gray, // 색상 변경
+            tint =  Color.Unspecified , // 색상 변경
             contentDescription = "Favorite",
             modifier = Modifier
                 .size(20.dp) // 아이콘 크기 설정

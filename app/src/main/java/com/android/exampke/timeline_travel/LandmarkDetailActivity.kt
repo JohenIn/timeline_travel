@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,11 +21,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,6 +39,8 @@ import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LandmarkDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +70,20 @@ class LandmarkDetailActivity : ComponentActivity() {
 
 @Composable
 fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
+    val context = LocalContext.current
+    val db = AppDatabase.getDatabase(context) // 데이터베이스 인스턴스
+    val scope = rememberCoroutineScope()
+
+    // 즐겨찾기 상태 관리
+    var isFavorited: Boolean = false
+    val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
+
+    saveList.value.forEachIndexed { index, item ->
+        if (item.landmarkName == landmark.name) {
+            isFavorited = true
+        }
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -76,7 +96,13 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_favorite),
                 contentDescription = "favorite",
-                tint = Color.Unspecified
+                tint = if (isFavorited) Color.Unspecified else Color.Gray,
+                modifier = Modifier
+                    .clickable {
+                        scope.launch(Dispatchers.IO) {
+                            db.saveDataDao().insertAll(SaveData(landmarkName = landmark.name))
+                        }
+                    }
             )
         }
         AsyncImage(
