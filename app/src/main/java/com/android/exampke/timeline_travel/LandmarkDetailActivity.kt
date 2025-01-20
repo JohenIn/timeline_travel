@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -82,7 +81,6 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
     // 즐겨찾기 상태 관리
     val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
     var isFavorited by remember { mutableStateOf(false)}
-
 
     LaunchedEffect(saveList.value){
         saveList.value.forEachIndexed { index, item ->
