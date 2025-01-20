@@ -65,19 +65,12 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Row() {
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                painter = painterResource(id = R.drawable.icon_favorite),
-                contentDescription = "favorite",
-                tint = Color.Unspecified
-            )
-        }
+        Spacer(modifier = Modifier.height(30.dp))
 
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .width(90.dp)
+                .height(100.dp)
         ) {
             imageUri?.let {
                 Image(
@@ -85,7 +78,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
                     contentDescription = "불러온 이미지",
                     modifier = Modifier.fillMaxSize()
                 )
-            }
+            }?: Text("없음")
         }
         Text(text = "내가 찾은 랜드마크는?")
         Box(
