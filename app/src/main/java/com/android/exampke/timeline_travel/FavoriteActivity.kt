@@ -4,12 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,8 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,16 +49,20 @@ class FavoriteActivity : ComponentActivity() {
         setContent {
             Timeline_travelTheme {
                 Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
                     topBar = {
                         TopBar()
                     },
                     bottomBar = {
                         BottomNavigationBar()
                     },
-                    modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     FavoriteScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .background(Color.White)
                     )
                 }
             }
@@ -72,51 +73,33 @@ class FavoriteActivity : ComponentActivity() {
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
 
-    // 즐겨찾기 상태를 관리하는 리스트
-    val favoriteLandmarks = remember { mutableStateListOf<Landmark>() }
-
-    // 랜드마크 리스트에서 즐겨찾기만 필터링
-    val favoriteItems = remember { landmarks.filter { it.isFavorited } }
+    //room
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getDatabase(context) }
+    val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
 
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(
-                stringResource(R.string.favorite_landmark),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(5.dp),
-                color = Color(0xFFF0A0A0),
-            )
+            SectionTitle(R.string.favorite_landmark)
         }
-        // 리스트 항목 반복문
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            favoriteItems.forEach { landmark ->
-                FavoriteLandmark(
-                    landmark = landmark,
-                    onFavoriteChanged = { updatedLandmark ->
-                        // 즐겨찾기 상태 변경 시 리스트 갱신
-                        if (updatedLandmark.isFavorited) {
-                            if (!favoriteLandmarks.contains(updatedLandmark)) {
-                                favoriteLandmarks.add(updatedLandmark)
-                            }
-                        } else {
-                            favoriteLandmarks.remove(updatedLandmark)
-                        }
-                    }
+            saveList.value.forEachIndexed {index, item ->
+                Text(
+                    text = "${item.landmarkName}",
+                    fontSize = 15.sp,
                 )
             }
         }
@@ -157,13 +140,7 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
                 .size(20.dp) // 아이콘 크기 설정
                 .clickable {
                     // 즐겨찾기 상태 변경
-                    landmark.isFavorited = !landmark.isFavorited
                     onFavoriteChanged(landmark) // 변경된 상태 반영
-                    // 즐겨찾기 상태 변경 후 화면 새로고침
-                    val intent = Intent(context, FavoriteActivity::class.java)
-                    // 현재 액티비티를 종료하고 새로 시작하는 방식
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    context.startActivity(intent)
                 }
         )
         Spacer(modifier = Modifier.height(50.dp))

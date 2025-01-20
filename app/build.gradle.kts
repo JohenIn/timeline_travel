@@ -82,4 +82,9 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
     implementation("io.coil-kt:coil-gif:2.6.0")
 
+    implementation ("androidx.compose.ui:ui:1.5.1")
+    implementation ("androidx.compose.runtime:runtime:1.5.1")
+    implementation ("androidx.activity:activity-compose:1.8.0")
+
+
 }
