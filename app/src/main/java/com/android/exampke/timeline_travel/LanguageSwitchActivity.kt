@@ -72,38 +72,28 @@ fun LanguageSwitchScreen(
         padding(horizontal = 50.dp)
     ) {
         Spacer(modifier = Modifier.height( 50.dp))
-
         SectionTitle(R.string.select_language)
         Spacer(modifier = Modifier.height( 50.dp))
         Row(horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()) {
-            // 한국어 버튼
-            Icon(
-                painter = painterResource(id = R.drawable.flag_korea),
-                contentDescription = "Korean",
-                tint = Color.Unspecified,
-                modifier = Modifier.clickable { onLanguageSelected("ko")}.size(60.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.flag_japan),
-                contentDescription = "Japan",
-                tint = Color.Unspecified,
-                modifier = Modifier.clickable { onLanguageSelected("ja") }.size(60.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.flag_usa),
-                contentDescription = "English",
-                tint = Color.Unspecified,
-                modifier = Modifier.clickable { onLanguageSelected("en") }.size(60.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.flag_vietnam),
-                contentDescription = "Vietnam",
-                tint = Color.Unspecified,
-                modifier = Modifier.clickable { onLanguageSelected("vi") }.size(60.dp)
-            )
+            LanguageChangeFlag(R.drawable.flag_korea,"ko",onLanguageSelected)
+            LanguageChangeFlag(R.drawable.flag_japan,"ja",onLanguageSelected)
+            LanguageChangeFlag(R.drawable.flag_usa,"en",onLanguageSelected)
+            LanguageChangeFlag(R.drawable.flag_vietnam,"vi",onLanguageSelected)
         }
     }
+}
+
+@Composable
+private fun LanguageChangeFlag(icon: Int,languageCode: String,onLanguageSelected: (String) -> Unit) {
+    Icon(
+        painter = painterResource(id = icon),
+        contentDescription = "flag",
+        tint = Color.Unspecified,
+        modifier = Modifier
+            .clickable { onLanguageSelected(languageCode) }
+            .size(60.dp)
+    )
 }
 
 fun setLocale(context: Context, languageCode: String) {
