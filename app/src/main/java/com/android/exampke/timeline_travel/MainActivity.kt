@@ -301,30 +301,32 @@ fun RegionalLandmark(region: Int, map: Int, regionFilters: List<String>) {
     Spacer(modifier = Modifier.width(15.dp))
     Box(
         modifier = Modifier
-            .clickable {
-                val intent = Intent(context, RegionalLandmarkActivity::class.java).apply {
-                    putParcelableArrayListExtra("filteredLandmarks", ArrayList(filteredLandmarks))
-                }
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                context.startActivity(intent)
-            }
-            .height(256.dp)
-            .width(144.dp)
             .border(
                 0.8.dp,
                 colorResource(R.color.theme_sub_orange),
                 RoundedCornerShape(20.dp)
             )
+            .clip(RoundedCornerShape(20.dp))
+            .clickable {
+                val intent = Intent(context, RegionalLandmarkActivity::class.java).apply {
+                    putParcelableArrayListExtra("filteredLandmarks", ArrayList(filteredLandmarks))
+                    putExtra("region", region)
+                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                context.startActivity(intent)
+            }
+            .width(144.dp)
+            .height(256.dp)
             .background(Color.White)
             .padding(5.dp)
-            .clip(RoundedCornerShape(20.dp))
+
     ) {
         Image(
             painter = painterResource(id = map),
             contentDescription = "seoul",
             modifier = Modifier
                 .align(alignment = Alignment.Center)
-                .padding(bottom = 20.dp)
+                .padding(bottom = 25.dp)
         )
         Text(
             stringResource(region),

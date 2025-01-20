@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,8 +20,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,15 +79,16 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
     val scope = rememberCoroutineScope()
 
     // 즐겨찾기 상태 관리
-    var isFavorited: Boolean = false
     val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
+    var isFavorited by remember { mutableStateOf(false)}
 
-    saveList.value.forEachIndexed { index, item ->
-        if (item.landmarkName == landmark.name) {
-            isFavorited = true
+    LaunchedEffect(saveList.value){
+        saveList.value.forEachIndexed { index, item ->
+            if (item.landmarkName == landmark.name) {
+                isFavorited = true
+            }
         }
     }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -100,7 +105,12 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
                 modifier = Modifier
                     .clickable {
                         scope.launch(Dispatchers.IO) {
-                            db.saveDataDao().insertAll(SaveData(landmarkName = landmark.name))
+                            if (isFavorited) {
+                                db.saveDataDao().deleteByName(landmark.name)
+                            } else {
+                                db.saveDataDao().insertAll(SaveData(landmarkName = landmark.name))
+                            }
+                            isFavorited = !isFavorited
                         }
                     }
             )

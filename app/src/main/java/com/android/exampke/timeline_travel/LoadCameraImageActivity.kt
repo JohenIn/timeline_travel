@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -63,20 +62,12 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Row() {
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                painter = painterResource(id = R.drawable.icon_favorite),
-                contentDescription = "favorite"
-            )
-        }
-        Text(text = "내가 찍은 사진은?")
+        Spacer(modifier = Modifier.height(30.dp))
+
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .background(color = Color.Transparent)
-                .width(150.dp)
-                .height(200.dp)
+                .height(100.dp)
         ) {
             capturedBitmap?.let {
                 Image(
@@ -86,22 +77,22 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
                 )
             } ?: Text("없음")
         }
-        Text("랜드마크 이름")
-        Text("랜드마크 간단 주소지")
-        Text("사진 보기  |  관련 영상  |  기본 정보")
+        Text(text = "내가 찾은 랜드마크는?")
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .background(color = Color.Blue)
-                .width(300.dp)
-                .height(400.dp)
+                .width(210.dp)
+                .height(280.dp)
         ) { Text("랜드마크의 대표 이미지") }
-        Text("타이틀 - 상세 정보")
+        Text("랜드마크 이름")
+        Text("랜드마크 간단 주소지")
+        Text("타이틀 - 상세 정보(역사 및 배경)")
         Text("상세 정보 내용, fold 가능")
-        Text("타이틀 - 최근 뉴스")
+        Text("타이틀 - 최근 뉴스, 어디 나왔는지")
+        Text("있으면 YouTube API")
         Text("관련 내용들, fold 가능")
-        Text("필요시 YouTube API")
-        Text("타이틀 - 기본 정보")
-        Text("기본 정보 내용들, fold 가능")
+        Text("기본 정보")
+        Text("기본 정보(상세 주소, 이용 시간), fold가능")
     }
 }
