@@ -89,4 +89,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation(platform("androidx.compose:compose-bom:2025.01.00"))
 
+    // Coil Compose 의존성 추가
+    implementation ("io.coil-kt:coil-compose:2.1.0")  // 최신 버전 확인 필요
+
 }
