@@ -58,6 +58,9 @@
         <activity android:name=".LoadCameraImageActivity"/>
         <activity android:name=".LandmarkDetailActivity"/>
         <activity android:name=".RegionalLandmarkActivity"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>
