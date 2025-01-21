@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import coil3.Bitmap
 import com.android.exampke.timeline_travel.model.RetrofitClient
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
@@ -73,6 +74,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
     val landmarkDescription = remember { mutableStateOf("랜드마크 설명을 로드 중...") }
     val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
+    val landmarks = getLandmarks()  // 이곳은 랜드마크 데이터를 불러오는 함수입니다
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -98,13 +100,19 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
             } ?: Text("이미지를 로드할 수 없습니다.")
         }
         Text(text = "내가 찾은 랜드마크는?")
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .background(color = Color.Blue)
-                .width(210.dp)
-                .height(280.dp)
-        ) { Text(landmarkName.value) }
+
+        val found = landmarks.find { it.name == landmarkName.value }
+        found?.let { landmark ->
+            // 찾은 랜드마크의 이미지 URL을 사용하여 이미지 로드
+            Image(
+                painter = rememberImagePainter(landmark.images),
+                contentDescription = "랜드마크 이미지",
+                modifier = Modifier
+                    .width(210.dp)
+                    .height(280.dp)
+            )
+        } ?: Text("랜드마크를 찾을 수 없습니다.")
+
         Text("랜드마크 이름: ${landmarkName.value}")
         Text("설명: ${landmarkDescription.value}")
         Spacer(modifier = Modifier.height(20.dp))
