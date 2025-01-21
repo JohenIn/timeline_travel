@@ -112,8 +112,6 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
                     .width(210.dp)
                     .height(280.dp)
             )
-            Text("랜드마크 이름: ${landmark.name}")
-            Text("설명: ${landmark.history}")
         } ?: Text("랜드마크를 찾을 수 없습니다.")
 
         Text("랜드마크 이름: ${landmarkName.value}")
