@@ -69,4 +69,5 @@
     <string name="index24_location">서울시 종로구</string>
     <string name="index25_name">숭례문</string>
     <string name="index25_location">서울시 중구</string>
+    <string name="description">랜드마크 설명</string>
 </resources>

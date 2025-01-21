@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,7 +38,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -181,8 +184,29 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         // (서버 응답) 랜드마크 이름, 설명
-        Text("랜드마크 이름: ${landmarkNameState.value}", fontWeight = FontWeight.Bold)
-        Text("랜드마크 설명: ${landmarkDescriptionState.value}")
+        Text("${landmarkNameState.value}", fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text = stringResource(R.string.description),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(horizontal = 15.dp)
+            )
+        Spacer(modifier = Modifier
+            .height(1.dp)
+            .fillMaxWidth()
+            .background(Color.Black)
+        )
+        Text("${landmarkDescriptionState.value}")
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Spacer(modifier = Modifier
+            .height(1.dp)
+            .fillMaxWidth()
+            .background(Color.Black)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
         landmark.youTubeVideoId?.let { videoId ->
             Text("YouTube Video", fontWeight = FontWeight.Bold)
             YouTubePlayerScreen(videoId = videoId)
@@ -204,12 +228,14 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
                         questionAnswer.value = answer
                     }
                 }
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            },colors = ButtonDefaults.buttonColors(Color.Transparent),
+            modifier = Modifier.align(Alignment.CenterHorizontally).background(colorResource(R.color.theme_sub_blue))
         ) {
             Text("질문 보내기")
         }
-        Text("질문에 대한 답변: ${questionAnswer.value}")
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text("${questionAnswer.value}")
         Spacer(modifier = Modifier.height(20.dp))
         // 이하 기존 상세 정보 (DB/서버에서 이미 받은 데이터)
     }
