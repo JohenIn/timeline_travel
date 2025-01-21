@@ -57,4 +57,16 @@
     <string name="favorite">즐겨찾기</string>
     <string name="map">지도</string>
     <string name="language">언어</string>
+    <string name="index20_name">흥인지문</string>
+    <string name="index20_location">서울시 동대문구</string>
+    <string name="index21_name">경복궁</string>
+    <string name="index21_location">서울시 종로구</string>
+    <string name="index22_name">창덕궁</string>
+    <string name="index22_location">서울시 종로구</string>
+    <string name="index23_name">창경궁</string>
+    <string name="index23_location">서울시 종로구</string>
+    <string name="index24_name">종묘</string>
+    <string name="index24_location">서울시 종로구</string>
+    <string name="index25_name">숭례문</string>
+    <string name="index25_location">서울시 중구</string>
 </resources>

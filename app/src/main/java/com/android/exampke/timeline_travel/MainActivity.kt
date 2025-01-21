@@ -155,7 +155,7 @@ private fun HomeAlbumButton() {
         }
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }) {
+    }.padding(horizontal = 20.dp)) {
         Icon(
             painter = painterResource(id = R.drawable.icon_album),
             contentDescription = "album",
@@ -209,7 +209,7 @@ private fun HomeCameraButton() {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
         requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-    }) {
+    }.padding(horizontal = 20.dp)) {
         Icon(
             painter = painterResource(id = R.drawable.icon_camera),
             contentDescription = "camera",

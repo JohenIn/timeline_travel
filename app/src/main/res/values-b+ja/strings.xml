@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">timeline_travel</string>
+    <string name="app_name">KOINPO</string>
     <string name="splashscreen_subtitle">AI韓国ガイド\n\nポケットの中に</string>
     <string name="open_camera">カメラを開く</string>
     <string name="open_album">アルバムを開く</string>
@@ -58,4 +58,16 @@
     <string name="favorite">お気に入り</string>
     <string name="map">地図</string>
     <string name="language">言語</string>
+    <string name="index20_name">興仁之門</string>
+    <string name="index20_location">ソウル市 東大門区</string>
+    <string name="index21_name">景福宮</string>
+    <string name="index21_location">ソウル市 鍾路区</string>
+    <string name="index22_name">昌徳宮</string>
+    <string name="index22_location">ソウル市 鍾路区</string>
+    <string name="index23_name">昌慶宮</string>
+    <string name="index23_location">ソウル市 鍾路区</string>
+    <string name="index24_name">宗廟</string>
+    <string name="index24_location">ソウル市 鍾路区</string>
+    <string name="index25_name">崇礼門 (スンネムン)</string>
+    <string name="index25_location">ソウル市 中区</string>
 </resources>

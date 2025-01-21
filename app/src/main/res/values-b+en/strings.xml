@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">timeline_travel</string>
+    <string name="app_name">KOINPO</string>
     <string name="splashscreen_subtitle">AI KOREA GUIDE\n\nIN YOUR POCKET</string>
     <string name="open_camera">"Open Camera</string>
     <string name="open_album">Open Album</string>
@@ -58,4 +58,16 @@
     <string name="favorite">FAVORITE</string>
     <string name="map">MAP</string>
     <string name="language">LANGUAGE</string>
+    <string name="index20_name">Heunginjimun</string>
+    <string name="index20_location">Dongdaemun-gu, Seoul</string>
+    <string name="index21_name">Gyeongbokgung Palace</string>
+    <string name="index21_location">Jongno-gu, Seoul</string>
+    <string name="index22_name">Changdeokgung Palace</string>
+    <string name="index22_location">Jongno-gu, Seoul</string>
+    <string name="index23_name">Cung Changgyeonggung</string>
+    <string name="index23_location">Jongno-gu, Seoul</string>
+    <string name="index24_name">Jongmyo Shrine</string>
+    <string name="index24_location">Jongno-gu, Seoul</string>
+    <string name="index25_name">Sungnyemun Gate</string>
+    <string name="index25_location">Jung-gu, Seoul</string>
 </resources>
