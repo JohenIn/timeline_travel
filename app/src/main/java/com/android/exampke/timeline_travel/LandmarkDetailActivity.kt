@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -184,18 +185,21 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         // (서버 응답) 랜드마크 이름, 설명
-        Text(landmarkNameState.value, fontWeight = FontWeight.Bold)
+        LandmarkTitle(landmarkNameState)
+        LandmarkLocation(landmark)
+
         Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = stringResource(R.string.description),
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(horizontal = 15.dp)
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(vertical = 15.dp)
         )
         Spacer(modifier = Modifier
             .height(1.dp)
             .fillMaxWidth()
             .background(Color.Black)
         )
+        Spacer(modifier = Modifier.height(20.dp))
         Text(landmarkDescriptionState.value)
         Spacer(modifier = Modifier.height(20.dp))
         Spacer(modifier = Modifier
@@ -237,6 +241,21 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
     }
 }
 
+@Composable
+fun LandmarkLocation(landmark: Landmark) {
+    Text(
+        landmark.location, fontSize = 15.sp,
+        color = Color.Gray,
+    )
+}
+
+@Composable
+fun LandmarkTitle(landmarkNameState: MutableState<String>) {
+    Text(
+        landmarkNameState.value, fontSize = 20.sp,
+        fontWeight = FontWeight.ExtraBold,
+    )
+}
 
 @Composable
 fun YouTubePlayerScreen(videoId: String) {

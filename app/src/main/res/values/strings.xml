@@ -70,5 +70,16 @@
     <string name="index25_name">숭례문</string>
     <string name="index25_location">서울시 중구</string>
     <string name="description">랜드마크 설명</string>
+    <string name="index0_news">여의도 불꽃축제 명소</string>
+    <string name="index2_news">트와이스, 세븐틴 팬미팅 장소</string>
+    <string name="index3_news">블랙핑크 \"Lovesick Girls\" 뮤직비디오 촬영지</string>
+    <string name="index5_news">방탄소년단 다큐멘터리 촬영장소</string>
+    <string name="index4_news">뉴진스 \"ETA\" 뮤직비디오 촬영장소</string>
+    <string name="index10_news">겨울연가 촬영지</string>
+    <string name="index8_news">\"별에서 온 그대\" 촬영장소</string>
+    <string name="index13_news">드라마 \"더 킹\" 촬영장소</string>
+    <string name="index18_news">뉴진스 \"OMG\" 뮤직비디오 촬영장소</string>
+    <string name="index21_news">BTS \"Dynamite\" 촬영지</string>
+    <string name="index25_news">드라마 \"이태원 클라쓰\" 촬영 장소</string>
 
 </resources>

@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,10 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil3.Bitmap
 import com.android.exampke.timeline_travel.model.RetrofitClient
@@ -103,33 +107,38 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
                 uploadImageToServer(it, landmarkName, landmarkDescription)
             } ?: Text("이미지를 로드할 수 없습니다.")
         }
-        Text(text = "내가 찾은 랜드마크는?")
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "내가 찾은 랜드마크는?", fontSize = 16.sp, color = Color.DarkGray)
+        Spacer(modifier = Modifier.height(10.dp))
+
 
         val found = landmarks.find { it.name == landmarkName.value }
         found?.let { landmark ->
             // 찾은 랜드마크의 이미지 URL을 사용하여 이미지 로드
             Image(
-                painter = rememberImagePainter(landmark.images),
+                painter = rememberAsyncImagePainter(landmark.images),
                 contentDescription = "랜드마크 이미지",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .width(210.dp)
                     .height(280.dp)
             )
         } ?: Text("랜드마크를 찾을 수 없습니다.")
+        Spacer(modifier = Modifier.height(10.dp))
+        LandmarkTitle(landmarkName)
 
-        Text("${landmarkName.value}", fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = stringResource(R.string.description),
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(horizontal = 15.dp)
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(vertical = 15.dp)
         )
         Spacer(modifier = Modifier
             .height(1.dp)
             .fillMaxWidth()
             .background(Color.Black)
         )
-        Text("${landmarkDescription.value}")
+        Text(landmarkDescription.value)
         Spacer(modifier = Modifier.height(20.dp))
         Spacer(modifier = Modifier
             .height(1.dp)

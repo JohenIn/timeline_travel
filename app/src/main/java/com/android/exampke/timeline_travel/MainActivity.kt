@@ -279,6 +279,16 @@ fun TrendLandmark(landmark: Landmark) {
             color = Color.Gray,
             fontSize = 15.sp
         )
+        landmark.news?.let {
+            Text(
+                landmark.news,
+                lineHeight = 20.sp,
+                modifier = Modifier.padding(start = 5.dp),
+                color = colorResource(R.color.theme_main_orange),
+                fontSize = 15.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
     }
 }
 

@@ -32,11 +32,13 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import com.android.exampke.timeline_travel.model.ApiResponse
@@ -118,32 +120,38 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
                 )
             } ?: Text("이미지를 불러올 수 없습니다.")
         }
-        Text(text = "내가 찾은 랜드마크는?")
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(text = "내가 찾은 랜드마크는?", fontSize = 16.sp, color = Color.DarkGray)
+        Spacer(modifier = Modifier.height(10.dp))
 
         val found = landmarks.find { it.name == landmarkName.value }
         found?.let { landmark ->
             Image(
                 painter = rememberImagePainter(landmark.images),
                 contentDescription = "랜드마크 이미지",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .width(210.dp)
                     .height(280.dp)
             )
         } ?: Text("랜드마크를 찾을 수 없습니다.")
-
-
-        Text(landmarkName.value, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(10.dp))
+        LandmarkTitle(landmarkName)
+        found?.let { landmark ->
+        LandmarkLocation(landmark)}
         Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = stringResource(R.string.description),
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(horizontal = 15.dp)
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(vertical = 15.dp)
         )
         Spacer(modifier = Modifier
             .height(1.dp)
             .fillMaxWidth()
             .background(Color.Black)
         )
+        Spacer(modifier = Modifier.height(20.dp))
         Text("설명: ${landmarkDescription.value}")
         Spacer(modifier = Modifier.height(20.dp))
         Spacer(modifier = Modifier
