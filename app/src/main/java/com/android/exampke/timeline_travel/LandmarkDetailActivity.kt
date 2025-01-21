@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -97,7 +98,7 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
 
     // 즐겨찾기 상태 관리
     val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
-    var isFavorited by remember { mutableStateOf(false)}
+    var isFavorited by remember { mutableStateOf(false) }
 
     val landmarkNameState = remember { mutableStateOf("서버에서 로딩중...") }
     val landmarkDescriptionState = remember { mutableStateOf("서버 설명 로딩중...") }
@@ -106,8 +107,9 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
     // 질문/답변 상태
     val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
+    val landmarkName = remember { mutableStateOf("랜드마크 이름을 로드 중...") }
 
-    LaunchedEffect(saveList.value){
+    LaunchedEffect(saveList.value) {
         saveList.value.forEachIndexed { index, item ->
             if (item.landmarkName == landmark.name) {
                 isFavorited = true
@@ -179,8 +181,12 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         // (서버 응답) 랜드마크 이름, 설명
-        Text("서버 응답 - 랜드마크 이름: ${landmarkNameState.value}", fontWeight = FontWeight.Bold)
-        Text("서버 응답 - 랜드마크 설명: ${landmarkDescriptionState.value}")
+        Text("랜드마크 이름: ${landmarkNameState.value}", fontWeight = FontWeight.Bold)
+        Text("랜드마크 설명: ${landmarkDescriptionState.value}")
+        landmark.youTubeVideoId?.let { videoId ->
+            Text("YouTube Video", fontWeight = FontWeight.Bold)
+            YouTubePlayerScreen(videoId = videoId)
+        }
         Spacer(modifier = Modifier.height(20.dp))
         // 질문 입력 + 버튼
         TextField(
@@ -190,27 +196,24 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
-    }
-    Spacer(modifier = Modifier.height(10.dp))
-    Text("질문에 대한 답변: ${questionAnswer.value}")
-    Spacer(modifier = Modifier.height(20.dp))
-    // 이하 기존 상세 정보 (DB/서버에서 이미 받은 데이터)
-
-        Text(landmark.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text(landmark.location, fontSize = 18.sp, color = Color.Gray)
-        Text("History", fontWeight = FontWeight.Bold)
-        Text(landmark.history)
-        Text("Recent News", fontWeight = FontWeight.Bold)
-        Text(landmark.recentNews)
-        landmark.youTubeVideoId?.let { videoId ->
-            Text("YouTube Video", fontWeight = FontWeight.Bold)
-            YouTubePlayerScreen(videoId = videoId)
+        Spacer(modifier = Modifier.height(10.dp))
+        Button(
+            onClick = {
+                if (questionText.value.isNotBlank()) {
+                    askQuestionToServer(questionText.value, landmarkName.value) { answer ->
+                        questionAnswer.value = answer
+                    }
+                }
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("질문 보내기")
         }
-        Text("Address", fontWeight = FontWeight.Bold)
-        Text(landmark.address)
-        Text("Opening Hours", fontWeight = FontWeight.Bold)
-        Text(landmark.openingHours)
+        Text("질문에 대한 답변: ${questionAnswer.value}")
+        Spacer(modifier = Modifier.height(20.dp))
+        // 이하 기존 상세 정보 (DB/서버에서 이미 받은 데이터)
     }
+}
 
 
 @Composable
@@ -258,6 +261,7 @@ suspend fun downloadImageToFile(context: Context, imageUrl: String): File? {
         }
     }
 }
+
 /**
  * (2) 파일(이미지) → 서버 업로드 & 응답 받기
  */
@@ -284,6 +288,7 @@ fun uploadImageToServer(
                     onError("서버 응답 오류가 발생했습니다.")
                 }
             }
+
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 Log.e("Upload", "서버 호출 실패: ${t.message}")
                 onError("서버 호출 실패 / 네트워크 오류")
@@ -297,3 +302,27 @@ fun uploadImageToServer(
 /**
  * (3) 질문-답변 API
  */
+private fun askQuestionToServer(question: String,landmarkName: String,onAnswerReceived: (String) -> Unit
+) {
+    try {
+        val call = RetrofitClient.instance.askQuestion(landmarkName, question)
+        call.enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    onAnswerReceived(apiResponse?.answer ?: "답변을 가져올 수 없습니다.")
+                } else {
+                    Log.e("AskQuestion", "서버 응답 오류: ${response.errorBody()?.string()}")
+                    onAnswerReceived("서버 응답 오류가 발생했습니다.")
+                }
+            }
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                Log.e("AskQuestion", "서버 호출 실패: ${t.message}")
+                onAnswerReceived("네트워크 오류가 발생했습니다.")
+            }
+        })
+    } catch (e: Exception) {
+        Log.e("AskQuestion", "질문 전송 중 오류: ${e.message}")
+        onAnswerReceived("질문 처리 중 오류가 발생했습니다.")
+    }
+}

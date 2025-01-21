@@ -126,6 +126,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
         Text("설명: ${landmarkDescription.value}")
         Spacer(modifier = Modifier.height(20.dp))
         // 질문 입력창 + 버튼
+
         TextField(
             value = questionText.value,
             onValueChange = { questionText.value = it },
