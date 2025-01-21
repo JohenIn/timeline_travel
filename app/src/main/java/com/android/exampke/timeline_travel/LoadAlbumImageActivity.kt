@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -32,6 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil3.compose.rememberAsyncImagePainter
@@ -93,6 +97,28 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(30.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .height(100.dp)
+        ) {
+            imageUri?.let {
+                Image(
+                    painter = rememberAsyncImagePainter(it), // URI를 통해 이미지를 로드
+                    contentDescription = "album image",
+                    modifier = Modifier.fillMaxSize()
+                )
+// 앨범에서 가져온 이미지를 서버로 업로드 (자동 1회)
+                // => 아래 rememberUploadOnce 호출
+                rememberUploadOnce(
+                    context = activity,
+                    uri = it,
+                    landmarkName = landmarkName,
+                    landmarkDescription = landmarkDescription
+                )
+            } ?: Text("이미지를 불러올 수 없습니다.")
+        }
+        Text(text = "내가 찾은 랜드마크는?")
 
         val found = landmarks.find { it.name == landmarkName.value }
         found?.let { landmark ->
@@ -104,20 +130,28 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
                     .height(280.dp)
             )
         } ?: Text("랜드마크를 찾을 수 없습니다.")
-        Text(text = "내가 찾은 랜드마크는?")
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .background(color = Color.Blue)
-                .width(210.dp)
-                .height(280.dp)
-        ) {
-            Text(landmarkName.value)
-        }
-        Text("랜드마크 이름: ${landmarkName.value}")
+
+
+        Text(landmarkName.value, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = stringResource(R.string.description),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(horizontal = 15.dp)
+        )
+        Spacer(modifier = Modifier
+            .height(1.dp)
+            .fillMaxWidth()
+            .background(Color.Black)
+        )
         Text("설명: ${landmarkDescription.value}")
         Spacer(modifier = Modifier.height(20.dp))
-        // 질문 입력창 + 버튼
+        Spacer(modifier = Modifier
+            .height(1.dp)
+            .fillMaxWidth()
+            .background(Color.Black)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
             value = questionText.value,
@@ -133,16 +167,13 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
                         questionAnswer.value = answer
                     }
                 }
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            },colors = ButtonDefaults.buttonColors(Color.Transparent),
+            modifier = Modifier.align(Alignment.CenterHorizontally).background(colorResource(R.color.theme_sub_blue))
         ) {
             Text("질문 보내기")
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Text("질문에 대한 답변:")
         Text(questionAnswer.value)
-        Spacer(modifier = Modifier.height(20.dp))
-        Text("기타 UI 예시, fold 가능 등 추가...")
         Spacer(modifier = Modifier.height(20.dp))
     }
 }

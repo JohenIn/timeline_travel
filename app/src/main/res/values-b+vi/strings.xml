@@ -70,4 +70,6 @@
     <string name="index24_location">Quận Jongno, Seoul</string>
     <string name="index25_name">Cửa Sungnyemun</string>
     <string name="index25_location">Quận Jung, Seoul</string>
+    <string name="description">Mô tả cột mốc</string>
+
 </resources>

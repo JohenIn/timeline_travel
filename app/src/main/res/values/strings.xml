@@ -12,7 +12,7 @@
     <string name="index0_location">서울시 영등포구</string>
     <string name="index1_name">이순신 장군 동상</string>
     <string name="index1_location">서울시 종로구</string>
-    <string name="index2_name">N서울타워</string>
+    <string name="index2_name">남산타워</string>
     <string name="index2_location">서울시 용산구</string>
     <string name="index3_name">롯데월드타워</string>
     <string name="index3_location">서울시 송파구</string>
@@ -69,4 +69,6 @@
     <string name="index24_location">서울시 종로구</string>
     <string name="index25_name">숭례문</string>
     <string name="index25_location">서울시 중구</string>
+    <string name="description">랜드마크 설명</string>
+
 </resources>

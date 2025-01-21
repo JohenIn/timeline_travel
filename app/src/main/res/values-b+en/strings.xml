@@ -70,4 +70,6 @@
     <string name="index24_location">Jongno-gu, Seoul</string>
     <string name="index25_name">Sungnyemun Gate</string>
     <string name="index25_location">Jung-gu, Seoul</string>
+    <string name="description">Landmark Description</string>
+
 </resources>

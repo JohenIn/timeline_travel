@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -28,6 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil3.Bitmap
@@ -113,8 +117,25 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
             )
         } ?: Text("랜드마크를 찾을 수 없습니다.")
 
-        Text("랜드마크 이름: ${landmarkName.value}")
-        Text("설명: ${landmarkDescription.value}")
+        Text("${landmarkName.value}", fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = stringResource(R.string.description),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(horizontal = 15.dp)
+        )
+        Spacer(modifier = Modifier
+            .height(1.dp)
+            .fillMaxWidth()
+            .background(Color.Black)
+        )
+        Text("${landmarkDescription.value}")
+        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier
+            .height(1.dp)
+            .fillMaxWidth()
+            .background(Color.Black)
+        )
         Spacer(modifier = Modifier.height(20.dp))
         // 질문 입력창과 버튼
         TextField(
@@ -131,13 +152,12 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
                         questionAnswer.value = answer
                     }
                 }
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            },colors = ButtonDefaults.buttonColors(Color.Transparent),
+            modifier = Modifier.align(Alignment.CenterHorizontally).background(colorResource(R.color.theme_sub_blue))
         ) {
             Text("질문 보내기")
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Text("질문에 대한 답변:")
         Text(questionAnswer.value)
         Spacer(modifier = Modifier.height(20.dp))
     }
