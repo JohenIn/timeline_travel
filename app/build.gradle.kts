@@ -82,4 +82,6 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
     implementation("io.coil-kt:coil-gif:2.6.0")
 
+    implementation ("com.airbnb.android:lottie-compose:6.6.2")
+
 }

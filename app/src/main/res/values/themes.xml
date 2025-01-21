@@ -6,11 +6,10 @@
     </style>
 
     <style name="Theme.MySplashScreen" parent="Theme.Timeline_travel">
-        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">
-            @drawable/splashbackgroundimage
-        </item>
-        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">
-            @android:color/transparent
-        </item>
+        <!-- 배경 색상 설정: 흰색 -->
+        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@android:color/white</item>
+
+        <!-- 로고 설정: 투명 -->
+        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">@android:color/transparent</item>
     </style>
 </resources>

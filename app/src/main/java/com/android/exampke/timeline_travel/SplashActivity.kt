@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.android.exampke.timeline_travel
 
 import android.annotation.SuppressLint
@@ -8,23 +10,22 @@ import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 
 @SuppressLint("CustomSplashScreen")
@@ -55,23 +56,19 @@ class SplashActivity : ComponentActivity() {
 fun SplashScreen() {
     Column(
         modifier = Modifier
-            .paint(
-                painterResource(R.drawable.splashbackgroundimage),
-                contentScale = ContentScale.FillHeight
-            )
+            .background(Color.White)
             .fillMaxSize()
-            .padding(vertical = 100.dp, horizontal = 30.dp)
     ) {
-        Text(
-            stringResource(R.string.app_name),
-            color = Color.Black,
-            fontSize = 80.sp,
-            lineHeight = 100.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.ExtraBold,
-            modifier = Modifier.fillMaxWidth()
+
+        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.koinposplash))
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+            iterations = 1 // 애니메이션 반복 횟수 (1: 한 번만 재생)
         )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(stringResource(R.string.splashscreen_subtitle), color = Color.White, fontSize = 40.sp)
+        LottieAnimation(
+            composition = composition,
+            progress = progress,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
