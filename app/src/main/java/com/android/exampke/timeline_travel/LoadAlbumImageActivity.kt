@@ -45,6 +45,8 @@ import java.io.FileOutputStream
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import coil.compose.rememberImagePainter
+
 
 class LoadAlbumImageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +84,8 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
     // 질문-답변 관련 상태
     val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
+    val landmarks = getLandmarks()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -113,15 +117,18 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
             } ?: Text("이미지를 불러올 수 없습니다.")
         }
         Text(text = "내가 찾은 랜드마크는?")
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .background(color = Color.Blue)
-                .width(210.dp)
-                .height(280.dp)
-        ) {
-            Text(landmarkName.value)
-        }
+
+        val found = landmarks.find { it.name == landmarkName.value }
+        found?.let { landmark ->
+            Image(
+                painter = rememberImagePainter(landmark.images),
+                contentDescription = "랜드마크 이미지",
+                modifier = Modifier
+                    .width(210.dp)
+                    .height(280.dp)
+            )
+        } ?: Text("랜드마크를 찾을 수 없습니다.")
+
         Text("랜드마크 이름: ${landmarkName.value}")
         Text("설명: ${landmarkDescription.value}")
         Spacer(modifier = Modifier.height(20.dp))
