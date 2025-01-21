@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">timeline_travel</string>
+    <string name="app_name">KOINPO</string>
     <string name="splashscreen_subtitle">HƯỚNG DẪN AI HÀN QUỐC\n\nTRONG TÚI CỦA BẠN</string>
     <string name="open_camera">Mở Máy Ảnh</string>
     <string name="open_album">Mở Album</string>
@@ -58,4 +58,16 @@
     <string name="favorite">THÍCH</string>
     <string name="map">BẢN</string>
     <string name="language">NGỮ</string>
+    <string name="index20_name">Cửa Heunginjimun</string>
+    <string name="index20_location">Quận Dongdaemun, Seoul</string>
+    <string name="index21_name">Cung Gyeongbokgung</string>
+    <string name="index21_location">Quận Jongno, Seoul</string>
+    <string name="index22_name">Cung Changdeokgung</string>
+    <string name="index22_location">Quận Jongno, Seoul</string>
+    <string name="index23_name">Changgyeonggung Palace</string>
+    <string name="index23_location">Quận Jongno, Seoul</string>
+    <string name="index24_name">Miếu Jongmyo</string>
+    <string name="index24_location">Quận Jongno, Seoul</string>
+    <string name="index25_name">Cửa Sungnyemun</string>
+    <string name="index25_location">Quận Jung, Seoul</string>
 </resources>
