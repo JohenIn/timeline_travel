@@ -150,6 +150,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
         Text(questionAnswer.value)
         Spacer(modifier = Modifier.height(20.dp))
         Text("기타 UI 예시, fold 가능 등 추가...")
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 

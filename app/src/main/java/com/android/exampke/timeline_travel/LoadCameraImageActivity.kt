@@ -131,6 +131,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
         Spacer(modifier = Modifier.height(20.dp))
         Text("질문에 대한 답변:")
         Text(questionAnswer.value)
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
