@@ -67,7 +67,6 @@ class FavoriteActivity : ComponentActivity() {
 
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
-    //room
     val context = LocalContext.current
     val db = remember { AppDatabase.getDatabase(context) }
     val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
@@ -87,8 +86,6 @@ fun FavoriteScreen(modifier: Modifier) {
         ) {
             SectionTitle(R.string.favorite_landmark)
         }
-        // 리스트 항목 반복문
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -102,6 +99,7 @@ fun FavoriteScreen(modifier: Modifier) {
         }
     }
 }
+
 
 @Composable
 private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -> Unit) {
@@ -122,7 +120,7 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
                     val intent = Intent(context, LandmarkDetailActivity::class.java).apply {
-                        putExtra("landmark", landmark) // Landmark 객체 전달
+                        putExtra("landmark", landmark)
                     }
                     context.startActivity(intent)
                 },
@@ -131,13 +129,12 @@ private fun FavoriteLandmark(landmark: Landmark, onFavoriteChanged: (Landmark) -
         Text(landmark.location, lineHeight = 14.sp, modifier = Modifier.padding(start = 5.dp))
         Icon(
             painter = painterResource(R.drawable.icon_favorite),
-            tint =  Color.Unspecified , // 색상 변경
+            tint =  Color.Unspecified ,
             contentDescription = "Favorite",
             modifier = Modifier
-                .size(20.dp) // 아이콘 크기 설정
+                .size(20.dp)
                 .clickable {
-                    // 즐겨찾기 상태 변경
-                    onFavoriteChanged(landmark) // 변경된 상태 반영
+                    onFavoriteChanged(landmark)
                 }
         )
         Spacer(modifier = Modifier.height(50.dp))
