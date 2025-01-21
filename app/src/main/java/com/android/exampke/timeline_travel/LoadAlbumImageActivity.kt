@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import com.android.exampke.timeline_travel.model.ApiResponse
 import com.android.exampke.timeline_travel.model.RetrofitClient
@@ -95,27 +96,16 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
     ) {
         Spacer(modifier = Modifier.height(30.dp))
 
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .height(100.dp)
-        ) {
-            imageUri?.let {
-                Image(
-                    painter = rememberAsyncImagePainter(it), // URI를 통해 이미지를 로드
-                    contentDescription = "album image",
-                    modifier = Modifier.fillMaxSize()
-                )
-// 앨범에서 가져온 이미지를 서버로 업로드 (자동 1회)
-                // => 아래 rememberUploadOnce 호출
-                rememberUploadOnce(
-                    context = activity,
-                    uri = it,
-                    landmarkName = landmarkName,
-                    landmarkDescription = landmarkDescription
-                )
-            } ?: Text("이미지를 불러올 수 없습니다.")
-        }
+        val found = landmarks.find { it.name == landmarkName.value }
+        found?.let { landmark ->
+            Image(
+                painter = rememberImagePainter(landmark.images),
+                contentDescription = "랜드마크 이미지",
+                modifier = Modifier
+                    .width(210.dp)
+                    .height(280.dp)
+            )
+        } ?: Text("랜드마크를 찾을 수 없습니다.")
         Text(text = "내가 찾은 랜드마크는?")
 
         val found = landmarks.find { it.name == landmarkName.value }
@@ -133,6 +123,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
         Text("설명: ${landmarkDescription.value}")
         Spacer(modifier = Modifier.height(20.dp))
         // 질문 입력창 + 버튼
+
         TextField(
             value = questionText.value,
             onValueChange = { questionText.value = it },
@@ -157,6 +148,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
         Text(questionAnswer.value)
         Spacer(modifier = Modifier.height(20.dp))
         Text("기타 UI 예시, fold 가능 등 추가...")
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
