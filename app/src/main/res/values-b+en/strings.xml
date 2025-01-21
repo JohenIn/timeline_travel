@@ -72,10 +72,10 @@
     <string name="index25_location">Jung-gu, Seoul</string>
     <string name="description">Landmark Description</string>
     <string name="index0_news">Yeouido Fireworks Festival Hotspot</string>
-    <string name="index2_news">TWICE, SEVENTEEN Fan Meeting Venue</string>
-    <string name="index3_news">BLACKPINK \"Lovesick Girls\" Music Video Filming Location</string>
-    <string name="index5_news">BTS Documentary Filming Location</string>
-    <string name="index4_news">NewJeans \"ETA\" Music Video Filming Location</string>
+    <string name="index2_news">TWICE, SEVENTEEN\nFan Meeting Venue</string>
+    <string name="index3_news">BLACKPINK \"Lovesick Girls\"\nMusic Video Filming Location</string>
+    <string name="index5_news">BTS Documentary Filming\nLocation</string>
+    <string name="index4_news">NewJeans \"ETA\" Music Video\nFilming Location</string>
     <string name="index10_news">Winter Sonata Filming Location</string>
     <string name="index8_news">\"My Love from the Star\" Filming Location</string>
     <string name="index13_news">Drama \"The King\" Filming Location</string>
