@@ -58,6 +58,8 @@ import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContent {
             Timeline_travelTheme {
                 Scaffold(
@@ -74,7 +76,8 @@ class MainActivity : ComponentActivity() {
                     MainScreen(
                         modifier = Modifier
                             .padding(innerPadding)
-                            .background(Color.White)
+                            .background(Color.White),
+                        currentLanguage = loadLanguagePreference(this) ?: "ko"
                     )
                 }
             }
@@ -84,7 +87,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(
-    modifier: Modifier
+    modifier: Modifier,
+    currentLanguage: String
 ) {
     Column(
         modifier = modifier
@@ -112,6 +116,8 @@ fun MainScreen(
             }
             Spacer(modifier = Modifier.width(15.dp))
         }
+
+        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
         Spacer(modifier = Modifier.height(20.dp))
         SectionTitle(R.string.nearby_landmark)
         Row(
