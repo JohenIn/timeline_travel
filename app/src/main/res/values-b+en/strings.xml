@@ -23,7 +23,7 @@
     <string name="index5_location">Dalseo-gu, Daegu</string>
     <string name="index6_name">Incheon Bridge</string>
     <string name="index6_location">Jung-gu, Incheon</string>
-    <string name="index7_name">May 18 Democratic Cemetery Symbolic Tower</string>
+    <string name="index7_name">May 18 Democratic\nCemetery Symbolic Tower</string>
     <string name="index7_location">Buk-gu, Gwangju</string>
     <string name="index8_name">Expo Science Park Hanbit Tower</string>
     <string name="index8_location">Yuseong-gu, Daejeon</string>
@@ -82,5 +82,13 @@
     <string name="index18_news">NewJeans \"OMG\" Music Video Filming Location</string>
     <string name="index21_news">BTS \"Dynamite\" Filming Location</string>
     <string name="index25_news">Drama \"Itaewon Class\" Filming Location</string>
+    <string name="loadfromserver">Loading from the server</string>
+    <string name="questionAnswer">"The answer to the question will be displayed here. "</string>
+    <string name="ask_question">Ask a Question</string>
+    <string name="enter_question">Enter your question.</string>
+    <string name="unknown_landmark">Unknown Landmark</string>
+    <string name="landmark_i_found">What is the landmark I found?</string>
+    <string name="cannot_find_landmark">Unable to find the landmark.</string>
+    <string name="cannot_find_description">Unable to fetch the description.</string>
 
 </resources>

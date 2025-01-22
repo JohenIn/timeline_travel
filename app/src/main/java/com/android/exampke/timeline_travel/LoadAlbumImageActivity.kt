@@ -123,7 +123,7 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
         }
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(text = "내가 찾은 랜드마크는?", fontSize = 16.sp, color = Color.DarkGray)
+        Text(stringResource(R.string.landmark_i_found), fontSize = 16.sp, color = Color.DarkGray)
         Spacer(modifier = Modifier.height(10.dp))
 
         val found = landmarks.find { it.name == landmarkName.value }
@@ -136,7 +136,7 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
                     .width(210.dp)
                     .height(280.dp)
             )
-        } ?: Text("랜드마크를 찾을 수 없습니다.")
+        } ?: Text(stringResource(R.string.cannot_find_landmark))
         Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
         Spacer(modifier = Modifier.height(10.dp))
         LandmarkTitle(landmarkName)
@@ -166,7 +166,7 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
         TextField(
             value = questionText.value,
             onValueChange = { questionText.value = it },
-            placeholder = { Text("질문을 입력하세요") },
+            placeholder = { Text(stringResource(R.string.enter_question)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -180,7 +180,7 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
             },colors = ButtonDefaults.buttonColors(Color.Transparent),
             modifier = Modifier.align(Alignment.CenterHorizontally).background(colorResource(R.color.theme_sub_blue))
         ) {
-            Text("질문 보내기")
+            Text(stringResource(R.string.ask_question))
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(questionAnswer.value)
@@ -256,8 +256,9 @@ private fun uploadImageToServerFromUri(
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
-                    landmarkName.value = apiResponse?.landmark ?: "알 수 없는 랜드마크"
-                    landmarkDescription.value = apiResponse?.answer ?: "설명을 가져올 수 없습니다."
+                    val applicationContext = MyApplication.appContext
+                    landmarkName.value = apiResponse?.landmark ?: applicationContext.getString(R.string.unknown_landmark)
+                    landmarkDescription.value = apiResponse?.answer ?: applicationContext.getString(R.string.cannot_find_description)
                 } else {
                     Log.e("Upload", "서버 응답 오류: ${response.errorBody()?.string()}")
                     landmarkName.value = "서버 응답 오류"

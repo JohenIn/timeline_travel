@@ -82,5 +82,13 @@
     <string name="index18_news">ニュージーンズ「OMG」ミュージックビデオ 撮影地</string>
     <string name="index21_news">BTS「Dynamite」撮影地</string>
     <string name="index25_news">ドラマ「梨泰院クラス」撮影地</string>
+    <string name="loadfromserver">サーバーから読み込み中</string>
+    <string name="questionAnswer">質問に対する答えがここに表示されます。</string>
+    <string name="ask_question">質問する</string>
+    <string name="enter_question">質問を入力してください。</string>
+    <string name="unknown_landmark">不明なランドマーク</string>
+    <string name="landmark_i_found">私が見つけたランドマークは？</string>
+    <string name="cannot_find_landmark">ランドマークを見つけることができません。</string>
+    <string name="cannot_find_description">説明を取得できません。</string>
 
 </resources>

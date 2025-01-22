@@ -82,5 +82,13 @@
     <string name="index18_news">Địa điểm quay MV \"OMG\" của NewJeans</string>
     <string name="index21_news">Địa điểm quay \"Dynamite\" của BTS</string>
     <string name="index25_news">Địa điểm quay phim \"Itaewon Class\"</string>
+    <string name="loadfromserver">Đang tải từ máy chủ</string>
+    <string name="questionAnswer">Câu trả lời cho câu hỏi sẽ được hiển thị ở đây.</string>
+    <string name="ask_question">Đặt câu hỏi</string>
+    <string name="enter_question">Nhập câu hỏi của bạn.</string>
+    <string name="unknown_landmark">Địa danh không xác định</string>
+    <string name="landmark_i_found">Địa danh tôi đã tìm thấy là gì?</string>
+    <string name="cannot_find_landmark">Không thể tìm thấy địa danh.</string>
+    <string name="cannot_find_description">Không thể lấy được mô tả.</string>
 
 </resources>

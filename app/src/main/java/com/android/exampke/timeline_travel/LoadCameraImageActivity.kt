@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -80,11 +82,18 @@ class LoadCameraImageActivity : ComponentActivity() {
 
 @Composable
 fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLanguage: String) {
+    val context = LocalContext.current
     val landmarkName = remember { mutableStateOf("랜드마크 이름을 로드 중...") }
     val landmarkDescription = remember { mutableStateOf("랜드마크 설명을 로드 중...") }
     val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
     val landmarks = getLandmarks()  // 이곳은 랜드마크 데이터를 불러오는 함수입니다
+
+    LaunchedEffect(Unit) {
+        landmarkName.value = context.getString(R.string.loadfromserver)
+        landmarkDescription.value = context.getString(R.string.loadfromserver)
+        questionAnswer.value = context.getString(R.string.questionAnswer)
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -112,7 +121,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
         Spacer(modifier = Modifier.height(10.dp))
         Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
 
-        Text(text = "내가 찾은 랜드마크는?", fontSize = 16.sp, color = Color.DarkGray)
+        Text(stringResource(R.string.landmark_i_found), fontSize = 16.sp, color = Color.DarkGray)
         Spacer(modifier = Modifier.height(10.dp))
 
 
@@ -127,7 +136,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
                     .width(210.dp)
                     .height(280.dp)
             )
-        } ?: Text("랜드마크를 찾을 수 없습니다.")
+        } ?: Text(stringResource(R.string.cannot_find_landmark))
         Spacer(modifier = Modifier.height(10.dp))
         LandmarkTitle(landmarkName)
 
@@ -154,7 +163,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
         TextField(
             value = questionText.value,
             onValueChange = { questionText.value = it },
-            placeholder = { Text("질문을 입력하세요") },
+            placeholder = { Text(stringResource(R.string.enter_question)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -168,7 +177,7 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
             },colors = ButtonDefaults.buttonColors(Color.Transparent),
             modifier = Modifier.align(Alignment.CenterHorizontally).background(colorResource(R.color.theme_sub_blue))
         ) {
-            Text("질문 보내기")
+            Text(stringResource(R.string.ask_question))
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(questionAnswer.value)
@@ -241,8 +250,9 @@ private fun uploadImageToServer(
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
-                    landmarkName.value = apiResponse?.landmark ?: "알 수 없는 랜드마크"
-                    landmarkDescription.value = apiResponse?.answer ?: "설명을 가져올 수 없습니다."
+                    val applicationContext = MyApplication.appContext
+                    landmarkName.value = apiResponse?.landmark ?: applicationContext.getString(R.string.unknown_landmark)
+                    landmarkDescription.value = apiResponse?.answer ?: applicationContext.getString(R.string.cannot_find_description)
                 } else {
                     Log.e("Upload", "서버 응답 오류: ${response.errorBody()?.string()}")
                     landmarkName.value = "서버 응답 오류"

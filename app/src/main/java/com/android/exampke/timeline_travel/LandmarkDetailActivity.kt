@@ -97,7 +97,7 @@ class LandmarkDetailActivity : ComponentActivity() {
 }
 
 @Composable
-fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark,currentLanguage: String) {
+fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage: String) {
     val context = LocalContext.current
     val db = AppDatabase.getDatabase(context) // 데이터베이스 인스턴스
     val scope = rememberCoroutineScope()
@@ -114,6 +114,12 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark,currentLanguage:
     val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
     val landmarkName = remember { mutableStateOf("랜드마크 이름을 로드 중...") }
+
+    LaunchedEffect(Unit) {
+        landmarkNameState.value = context.getString(R.string.loadfromserver)
+        landmarkDescriptionState.value = context.getString(R.string.loadfromserver)
+        questionAnswer.value = context.getString(R.string.questionAnswer)
+    }
 
     LaunchedEffect(saveList.value) {
         saveList.value.forEachIndexed { index, item ->
@@ -185,31 +191,45 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark,currentLanguage:
                 .width(210.dp)
                 .clip(RoundedCornerShape(8.dp))
         )
-        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
+        Text(
+            currentLanguage,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.ExtraBold,
+            lineHeight = 50.sp,
+            modifier = Modifier.padding(start = 15.dp)
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
         // (서버 응답) 랜드마크 이름, 설명
-        LandmarkTitle(landmarkNameState)
+        Text(
+            landmark.name, fontSize = 20.sp,
+            fontWeight = FontWeight.ExtraBold,
+        )
         LandmarkLocation(landmark)
 
         Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = stringResource(R.string.description),
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(vertical = 15.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Start)
+                .padding(vertical = 15.dp)
         )
-        Spacer(modifier = Modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .background(Color.Black)
+        Spacer(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(Color.Black)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(landmarkDescriptionState.value)
         Spacer(modifier = Modifier.height(20.dp))
-        Spacer(modifier = Modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .background(Color.Black)
+        Spacer(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(Color.Black)
         )
         Spacer(modifier = Modifier.height(20.dp))
         landmark.youTubeVideoId?.let { videoId ->
@@ -221,7 +241,7 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark,currentLanguage:
         TextField(
             value = questionText.value,
             onValueChange = { questionText.value = it },
-            placeholder = { Text("질문을 입력하세요") },
+            placeholder = { Text(stringResource(R.string.enter_question)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -233,10 +253,12 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark,currentLanguage:
                         questionAnswer.value = answer
                     }
                 }
-            },colors = ButtonDefaults.buttonColors(Color.Transparent),
-            modifier = Modifier.align(Alignment.CenterHorizontally).background(colorResource(R.color.theme_sub_blue))
+            }, colors = ButtonDefaults.buttonColors(Color.Transparent),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .background(colorResource(R.color.theme_sub_blue))
         ) {
-            Text("질문 보내기")
+            Text(stringResource(R.string.ask_question))
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(questionAnswer.value)
@@ -325,8 +347,9 @@ fun uploadImageToServer(
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
-                    val landmarkName = apiResponse?.landmark ?: "알 수 없는 랜드마크"
-                    val description = apiResponse?.answer ?: "설명을 가져올 수 없습니다."
+                    val applicationContext = MyApplication.appContext
+                    val landmarkName = apiResponse?.landmark ?: applicationContext.getString(R.string.unknown_landmark)
+                    val description = apiResponse?.answer ?: applicationContext.getString(R.string.cannot_find_description)
                     onSuccess(landmarkName, description)
                 } else {
                     Log.e("Upload", "서버 응답 오류: ${response.errorBody()?.string()}")
@@ -344,10 +367,12 @@ fun uploadImageToServer(
         onError("이미지 업로드 중 예외 발생")
     }
 }
+
 /**
  * (3) 질문-답변 API
  */
-private fun askQuestionToServer(question: String,landmarkName: String,onAnswerReceived: (String) -> Unit
+private fun askQuestionToServer(
+    question: String, landmarkName: String, onAnswerReceived: (String) -> Unit
 ) {
     try {
         val call = RetrofitClient.instance.askQuestion(landmarkName, question)
@@ -361,6 +386,7 @@ private fun askQuestionToServer(question: String,landmarkName: String,onAnswerRe
                     onAnswerReceived("서버 응답 오류가 발생했습니다.")
                 }
             }
+
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 Log.e("AskQuestion", "서버 호출 실패: ${t.message}")
                 onAnswerReceived("네트워크 오류가 발생했습니다.")
