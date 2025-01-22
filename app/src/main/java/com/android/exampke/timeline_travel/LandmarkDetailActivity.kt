@@ -85,7 +85,9 @@ class LandmarkDetailActivity : ComponentActivity() {
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .background(Color.White),
-                            landmark = it
+                            landmark = it,
+                            currentLanguage = loadLanguagePreference(this) ?: "ko"
+
                         )
                     }
                 }
@@ -95,7 +97,7 @@ class LandmarkDetailActivity : ComponentActivity() {
 }
 
 @Composable
-fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
+fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark,currentLanguage: String) {
     val context = LocalContext.current
     val db = AppDatabase.getDatabase(context) // 데이터베이스 인스턴스
     val scope = rememberCoroutineScope()
@@ -183,6 +185,8 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark) {
                 .width(210.dp)
                 .clip(RoundedCornerShape(8.dp))
         )
+        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
+
         Spacer(modifier = Modifier.height(10.dp))
         // (서버 응답) 랜드마크 이름, 설명
         LandmarkTitle(landmarkNameState)

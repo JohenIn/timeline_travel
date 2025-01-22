@@ -68,7 +68,8 @@ class LoadAlbumImageActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     LoadAlbumImageScreen(
-                        modifier = Modifier.padding(innerPadding).background(Color.White)
+                        modifier = Modifier.padding(innerPadding).background(Color.White),
+                        currentLanguage = loadLanguagePreference(this) ?: "ko"
                     )
                 }
             }
@@ -77,7 +78,7 @@ class LoadAlbumImageActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoadAlbumImageScreen(modifier: Modifier) {
+fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
     val activity = LocalContext.current as LoadAlbumImageActivity
     val context = LocalContext.current as LoadAlbumImageActivity
     // Intent로 전달된 이미지 가져오기
@@ -136,6 +137,7 @@ fun LoadAlbumImageScreen(modifier: Modifier) {
                     .height(280.dp)
             )
         } ?: Text("랜드마크를 찾을 수 없습니다.")
+        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
         Spacer(modifier = Modifier.height(10.dp))
         LandmarkTitle(landmarkName)
         found?.let { landmark ->

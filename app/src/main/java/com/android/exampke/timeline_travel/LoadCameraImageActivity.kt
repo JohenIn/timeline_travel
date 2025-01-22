@@ -68,7 +68,9 @@ class LoadCameraImageActivity : ComponentActivity() {
                     val capturedBitmap = intent.getParcelableExtra<Bitmap>("capturedImageBitmap")
                     LoadCameraImageScreen(
                         modifier = Modifier.padding(innerPadding).background(Color.White),
-                        capturedBitmap = capturedBitmap // 전달받은 Bitmap을 화면에 전달
+                        capturedBitmap = capturedBitmap, // 전달받은 Bitmap을 화면에 전달,
+                        currentLanguage = loadLanguagePreference(this) ?: "ko"
+
                     )
                 }
             }
@@ -77,7 +79,7 @@ class LoadCameraImageActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
+fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLanguage: String) {
     val landmarkName = remember { mutableStateOf("랜드마크 이름을 로드 중...") }
     val landmarkDescription = remember { mutableStateOf("랜드마크 설명을 로드 중...") }
     val questionText = remember { mutableStateOf("") }
@@ -108,6 +110,8 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?) {
             } ?: Text("이미지를 로드할 수 없습니다.")
         }
         Spacer(modifier = Modifier.height(10.dp))
+        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
+
         Text(text = "내가 찾은 랜드마크는?", fontSize = 16.sp, color = Color.DarkGray)
         Spacer(modifier = Modifier.height(10.dp))
 
