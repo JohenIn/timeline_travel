@@ -6,26 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil3.Bitmap
 import com.android.exampke.timeline_travel.model.RetrofitClient
 import com.android.exampke.timeline_travel.ui.theme.Timeline_travelTheme
@@ -68,9 +53,8 @@ class LoadCameraImageActivity : ComponentActivity() {
                     val capturedBitmap = intent.getParcelableExtra<Bitmap>("capturedImageBitmap")
                     LoadCameraImageScreen(
                         modifier = Modifier.padding(innerPadding).background(Color.White),
-                        capturedBitmap = capturedBitmap, // 전달받은 Bitmap을 화면에 전달,
+                        capturedBitmap = capturedBitmap,
                         currentLanguage = loadLanguagePreference(this) ?: "ko"
-
                     )
                 }
             }
@@ -79,12 +63,13 @@ class LoadCameraImageActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLanguage: String) {
+fun LoadCameraImageScreen(modifier: Modifier, capturedBitmap: Bitmap?, currentLanguage: String) {
     val landmarkName = remember { mutableStateOf("랜드마크 이름을 로드 중...") }
     val landmarkDescription = remember { mutableStateOf("랜드마크 설명을 로드 중...") }
     val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
-    val landmarks = getLandmarks()  // 이곳은 랜드마크 데이터를 불러오는 함수입니다
+    val landmarks = getLandmarks()
+    var showDetails by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -109,16 +94,15 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
                 uploadImageToServer(it, landmarkName, landmarkDescription)
             } ?: Text("이미지를 로드할 수 없습니다.")
         }
+
         Spacer(modifier = Modifier.height(10.dp))
-        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
+        Text(currentLanguage, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 50.sp, modifier = Modifier.padding(start = 15.dp))
 
         Text(text = "내가 찾은 랜드마크는?", fontSize = 16.sp, color = Color.DarkGray)
         Spacer(modifier = Modifier.height(10.dp))
 
-
         val found = landmarks.find { it.name == landmarkName.value }
         found?.let { landmark ->
-            // 찾은 랜드마크의 이미지 URL을 사용하여 이미지 로드
             Image(
                 painter = rememberAsyncImagePainter(landmark.images),
                 contentDescription = "랜드마크 이미지",
@@ -128,29 +112,47 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
                     .height(280.dp)
             )
         } ?: Text("랜드마크를 찾을 수 없습니다.")
+
         Spacer(modifier = Modifier.height(10.dp))
         LandmarkTitle(landmarkName)
 
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = stringResource(R.string.description),
+            text = "설명",
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start).padding(vertical = 15.dp)
+            fontSize = 18.sp,
+            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp)
         )
-        Spacer(modifier = Modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .background(Color.Black)
-        )
-        Text(landmarkDescription.value)
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = if (showDetails) " ${landmarkDescription.value}" else "${landmarkDescription.value.take(100)}...",
+                    color = Color.Black,
+                    fontSize = 16.sp,
+                    lineHeight = 22.sp,
+                    modifier = Modifier.clickable { showDetails = !showDetails }
+                )
+                if (!showDetails) {
+                    Text(
+                        text = "자세히 보기",
+                        color = Color.Blue,
+                        fontSize = 14.sp,
+                        modifier = Modifier.clickable { showDetails = true }
+                    )
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
-        Spacer(modifier = Modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .background(Color.Black)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        // 질문 입력창과 버튼
         TextField(
             value = questionText.value,
             onValueChange = { questionText.value = it },
@@ -165,16 +167,38 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
                         questionAnswer.value = answer
                     }
                 }
-            },colors = ButtonDefaults.buttonColors(Color.Transparent),
+            }, colors = ButtonDefaults.buttonColors(Color.Transparent),
             modifier = Modifier.align(Alignment.CenterHorizontally).background(colorResource(R.color.theme_sub_blue))
         ) {
             Text("질문 보내기")
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Text(questionAnswer.value)
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = questionAnswer.value,
+                    color = Color.Black,
+                    fontSize = 16.sp,
+                    lineHeight = 22.sp
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
     }
 }
+
+// uploadImageToServer 함수와 askQuestionToServer 함수는 기존 코드와 동일하므로 수정하지 않았습니다.
+
 
 private fun askQuestionToServer(question: String, landmarkName: String, onAnswerReceived: (String) -> Unit) {
     try {
