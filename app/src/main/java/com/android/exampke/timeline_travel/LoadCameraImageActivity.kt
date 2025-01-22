@@ -119,7 +119,6 @@ fun LoadCameraImageScreen(modifier: Modifier,capturedBitmap: Bitmap?, currentLan
             } ?: Text("이미지를 로드할 수 없습니다.")
         }
         Spacer(modifier = Modifier.height(10.dp))
-        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
 
         Text(stringResource(R.string.landmark_i_found), fontSize = 16.sp, color = Color.DarkGray)
         Spacer(modifier = Modifier.height(10.dp))

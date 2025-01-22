@@ -137,7 +137,6 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
                     .height(280.dp)
             )
         } ?: Text(stringResource(R.string.cannot_find_landmark))
-        Text(currentLanguage,fontSize = 20.sp,fontWeight = FontWeight.ExtraBold,lineHeight = 50.sp,modifier = Modifier.padding(start = 15.dp))
         Spacer(modifier = Modifier.height(10.dp))
         LandmarkTitle(landmarkName)
         found?.let { landmark ->

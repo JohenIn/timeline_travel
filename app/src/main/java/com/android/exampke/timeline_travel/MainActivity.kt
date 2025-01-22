@@ -101,6 +101,8 @@ fun MainScreen(
             HomeCameraButton()
             HomeAlbumButton()
         }
+        Spacer(modifier = Modifier.height(20.dp))
+
         SectionTitle(R.string.trending_landmark)
         Row(
             modifier = Modifier
@@ -114,7 +116,8 @@ fun MainScreen(
             }
             Spacer(modifier = Modifier.width(15.dp))
         }
-        Spacer(modifier = Modifier.height(20.dp))
+
+        Spacer(modifier = Modifier.height(15.dp))
         SectionTitle(R.string.nearby_landmark)
         Row(
             modifier = Modifier
@@ -125,19 +128,27 @@ fun MainScreen(
                 .padding(end = 15.dp)
         ) {
             RegionalLandmark(
-                R.string.region0_name, R.drawable.korea_sudokwon, listOf("서울", "Seoul", "ソウル","인천", "Incheon", "仁川","경기", "Gyeonggi", "京畿",)
+                R.string.region0_name,
+                R.drawable.korea_sudokwon,
+                listOf("서울", "Seoul", "ソウル", "인천", "Incheon", "仁川", "경기", "Gyeonggi", "京畿")
             )
             RegionalLandmark(
-                R.string.region1_name, R.drawable.korea_chungchung, listOf("충청", "Chungcheong", "忠清","대전", "Daejeon", "大田",)
+                R.string.region1_name,
+                R.drawable.korea_chungchung,
+                listOf("충청", "Chungcheong", "忠清", "대전", "Daejeon", "大田")
             )
             RegionalLandmark(
-                R.string.region2_name, R.drawable.korea_gangwon, listOf("강원", "Gangwon", "江原",)
+                R.string.region2_name, R.drawable.korea_gangwon, listOf("강원", "Gangwon", "江原")
             )
             RegionalLandmark(
-                R.string.region3_name, R.drawable.korea_gyungsang, listOf("경상", "Gyeongsang", "慶尚","부산", "Busan", "釜山","대구", "Daegu", "大邱","울산", "Ulsan", "蔚山",)
+                R.string.region3_name,
+                R.drawable.korea_gyungsang,
+                listOf("경상","Gyeongsang","慶尚","부산","Busan","釜山","대구","Daegu","大邱","울산","Ulsan","蔚山")
             )
             RegionalLandmark(
-                R.string.region4_name, R.drawable.korea_jullla, listOf("전라", "Jeolla", "全羅","광주", "Gwangju", "光州","제주", "Jeju", "済州",)
+                R.string.region4_name,
+                R.drawable.korea_jullla,
+                listOf("전라", "Jeolla", "全羅", "광주", "Gwangju", "光州", "제주", "Jeju", "済州")
             )
         }
     }
@@ -155,9 +166,11 @@ private fun HomeAlbumButton() {
                 context.startActivity(intent)
             }
         }
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
-        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }.padding(horizontal = 20.dp)) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+        .clickable {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+        .padding(horizontal = 20.dp)) {
         Icon(
             painter = painterResource(id = R.drawable.icon_album),
             contentDescription = "album",
@@ -209,9 +222,11 @@ private fun HomeCameraButton() {
         }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
-        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-    }.padding(horizontal = 20.dp)) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+        .clickable {
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+        .padding(horizontal = 20.dp)) {
         Icon(
             painter = painterResource(id = R.drawable.icon_camera),
             contentDescription = "camera",

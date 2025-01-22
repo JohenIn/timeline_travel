@@ -191,13 +191,6 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage
                 .width(210.dp)
                 .clip(RoundedCornerShape(8.dp))
         )
-        Text(
-            currentLanguage,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.ExtraBold,
-            lineHeight = 50.sp,
-            modifier = Modifier.padding(start = 15.dp)
-        )
 
         Spacer(modifier = Modifier.height(10.dp))
         // (서버 응답) 랜드마크 이름, 설명
