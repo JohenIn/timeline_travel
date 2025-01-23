@@ -98,7 +98,9 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
                     context = activity,
                     uri = it,
                     landmarkName = landmarkName,
-                    landmarkDescription = landmarkDescription
+                    landmarkDescription = landmarkDescription,
+                    currentLanguage = currentLanguage
+
                 )
             } ?: Text("이미지를 불러올 수 없습니다.")
         }
@@ -172,7 +174,7 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
         Button(
             onClick = {
                 if (questionText.value.isNotBlank()) {
-                    sendQuestionToServer(questionText.value, landmarkName.value) { answer ->
+                    sendQuestionToServer(questionText.value, landmarkName.value,currentLanguage) { answer ->
                         questionAnswer.value = answer
                     }
                 }
@@ -206,11 +208,13 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
     }
 }
 
+// LoadAlbumImageActivity에서 사용하는 uploadImageToServer
 private fun uploadImageToServer(
     context: Context,
     uri: Uri,
     landmarkName: MutableState<String>,
-    landmarkDescription: MutableState<String>
+    landmarkDescription: MutableState<String>,
+    currentLanguage: String // 언어 정보 추가
 ) {
     try {
         val tempFile = File.createTempFile("upload_image", ".jpg", context.cacheDir)
@@ -222,8 +226,9 @@ private fun uploadImageToServer(
 
         val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), tempFile)
         val body = MultipartBody.Part.createFormData("file", tempFile.name, requestFile)
-        val call = RetrofitClient.instance.uploadImage(body)
+        val languagePart = RequestBody.create("text/plain".toMediaTypeOrNull(), currentLanguage)
 
+        val call = RetrofitClient.instance.uploadImageWithLanguage(body, languagePart)
         call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
@@ -250,13 +255,15 @@ private fun uploadImageToServer(
     }
 }
 
+
 private fun sendQuestionToServer(
     question: String,
     landmarkName: String,
+    currentLanguage: String, // 언어 정보를 추가
     onAnswerReceived: (String) -> Unit
 ) {
     try {
-        val call = RetrofitClient.instance.askQuestion(landmarkName, question)
+        val call = RetrofitClient.instance.askQuestionWithLanguage(landmarkName, question, currentLanguage) // API 수정
         call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
