@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -91,6 +96,7 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
     val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
     val landmarks = getLandmarks()
+    var showDetails by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -113,11 +119,12 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
                 )
 // 앨범에서 가져온 이미지를 서버로 업로드 (자동 1회)
                 // => 아래 rememberUploadOnce 호출
-                rememberUploadOnce(
+                uploadImageToServer(
                     context = activity,
                     uri = it,
                     landmarkName = landmarkName,
-                    landmarkDescription = landmarkDescription
+                    landmarkDescription = landmarkDescription,
+                    currentLanguage = currentLanguage
                 )
             } ?: Text("이미지를 불러올 수 없습니다.")
         }
@@ -153,7 +160,33 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
             .background(Color.Black)
         )
         Spacer(modifier = Modifier.height(20.dp))
-        Text("설명: ${landmarkDescription.value}")
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = if (showDetails) " ${landmarkDescription.value}" else "${landmarkDescription.value.take(100)}...",
+                    color = Color.Black,
+                    fontSize = 16.sp,
+                    lineHeight = 22.sp,
+                    modifier = Modifier.clickable { showDetails = !showDetails }
+                )
+                if (!showDetails) {
+                    Text(
+                        text = "자세히 보기",
+                        color = Color.Blue,
+                        fontSize = 14.sp,
+                        modifier = Modifier.clickable { showDetails = true }
+                    )
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(20.dp))
         Spacer(modifier = Modifier
             .height(1.dp)
@@ -172,7 +205,7 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
         Button(
             onClick = {
                 if (questionText.value.isNotBlank()) {
-                    askQuestionToServer(questionText.value, landmarkName.value) { answer ->
+                    sendQuestionToServer(questionText.value, landmarkName.value,currentLanguage) { answer ->
                         questionAnswer.value = answer
                     }
                 }
@@ -183,112 +216,84 @@ fun LoadAlbumImageScreen(modifier: Modifier, currentLanguage: String) {
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(questionAnswer.value)
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = questionAnswer.value,
+                    color = Color.Black,
+                    fontSize = 16.sp,
+                    lineHeight = 22.sp
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
-/**
- * Composable이 재구성(Recomposition)될 때마다 매번 uploadImageToServerFromUri가
- * 호출되지 않도록 한 번만 실행하는 래퍼 함수
- */
-@Composable
-private fun rememberUploadOnce(
+// LoadAlbumImageActivity에서 사용하는 uploadImageToServer
+private fun uploadImageToServer(
     context: Context,
     uri: Uri,
     landmarkName: MutableState<String>,
-    landmarkDescription: MutableState<String>
+    landmarkDescription: MutableState<String>,
+    currentLanguage: String // 언어 정보 추가
 ) {
-    // 이미 업로드했는지 여부
-    val hasUploadedState = remember { mutableStateOf(false) }
-    // uri가 바뀔 때마다 다시 업로드할 필요가 있다면,
-    // uri를 key로 해도 되고, 원하는 로직에 따라 수정 가능.
-    val currentUri by rememberUpdatedState(uri)
-    if (!hasUploadedState.value) {
-        // 아직 업로드 전이면 업로드 진행
-        uploadImageToServerFromUri(
-            context = context,
-            uri = currentUri,
-            landmarkName = landmarkName,
-            landmarkDescription = landmarkDescription
-        )
-        hasUploadedState.value = true
-    }
-}
-private var isRequestInProgress = false
-/**
- * 실제 파일 복사(임시파일) + 서버 업로드 로직
- */
-private fun uploadImageToServerFromUri(
-    context: Context,
-    uri: Uri,
-    landmarkName: MutableState<String>,
-    landmarkDescription: MutableState<String>
-) {
-    // 이미 요청 중이라면 무시
-    if (isRequestInProgress) {
-        Log.w("Upload", "이미 요청 중입니다.")
-        return
-    }
-    isRequestInProgress = true
     try {
-        // 임시 파일 생성
         val tempFile = File.createTempFile("upload_image", ".jpg", context.cacheDir)
-        // Uri → File 복사
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
             FileOutputStream(tempFile).use { outputStream ->
                 inputStream.copyTo(outputStream)
             }
-        } ?: run {
-            // inputStream이 null인 경우
-            Log.e("Upload", "InputStream이 null입니다. Uri: $uri")
-            landmarkName.value = "이미지를 읽을 수 없습니다."
-            landmarkDescription.value = "해당 Uri에서 InputStream을 열 수 없습니다."
-            isRequestInProgress = false
-            return
         }
-        // 파일을 MultipartBody.Part로 변환
+
         val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), tempFile)
         val body = MultipartBody.Part.createFormData("file", tempFile.name, requestFile)
-        // Retrofit을 통해 서버에 업로드
-        val call = RetrofitClient.instance.uploadImage(body)
+
+        val languagePart = RequestBody.create("text/plain".toMediaTypeOrNull(), currentLanguage)
+
+        val call = RetrofitClient.instance.uploadImageWithLanguage(body, languagePart)
         call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
-                    val applicationContext = MyApplication.appContext
-                    landmarkName.value = apiResponse?.landmark ?: applicationContext.getString(R.string.unknown_landmark)
-                    landmarkDescription.value = apiResponse?.answer ?: applicationContext.getString(R.string.cannot_find_description)
+                    landmarkName.value = apiResponse?.landmark ?: "알 수 없는 랜드마크"
+                    landmarkDescription.value = apiResponse?.answer ?: "설명을 가져올 수 없습니다."
                 } else {
                     Log.e("Upload", "서버 응답 오류: ${response.errorBody()?.string()}")
                     landmarkName.value = "서버 응답 오류"
                     landmarkDescription.value = "서버와의 통신 중 문제가 발생했습니다."
                 }
-                isRequestInProgress = false
             }
+
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 Log.e("Upload", "서버 호출 실패: ${t.message}")
                 landmarkName.value = "서버 호출 실패"
                 landmarkDescription.value = "네트워크 연결을 확인하세요."
-                isRequestInProgress = false
             }
         })
     } catch (e: Exception) {
         Log.e("Upload", "이미지 업로드 중 오류: ${e.message}")
         landmarkName.value = "이미지 처리 오류"
         landmarkDescription.value = "이미지를 업로드하는 중 문제가 발생했습니다."
-        isRequestInProgress = false
     }
 }
-/**
- * 질문-답변 요청 함수 (카메라 액티비티와 동일하게 사용할 수 있음)
- */
-private fun askQuestionToServer(
+
+private fun sendQuestionToServer(
     question: String,
     landmarkName: String,
+    currentLanguage: String, // 언어 정보를 추가
     onAnswerReceived: (String) -> Unit
 ) {
     try {
-        val call = RetrofitClient.instance.askQuestion(landmarkName, question)
+        val call = RetrofitClient.instance.askQuestionWithLanguage(landmarkName, question, currentLanguage) // API 수정
         call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
@@ -299,6 +304,7 @@ private fun askQuestionToServer(
                     onAnswerReceived("서버 응답 오류가 발생했습니다.")
                 }
             }
+
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 Log.e("AskQuestion", "서버 호출 실패: ${t.message}")
                 onAnswerReceived("네트워크 오류가 발생했습니다.")
@@ -309,3 +315,15 @@ private fun askQuestionToServer(
         onAnswerReceived("질문 처리 중 오류가 발생했습니다.")
     }
 }
+
+/**
+ * Composable이 재구성(Recomposition)될 때마다 매번 uploadImageToServerFromUri가
+ * 호출되지 않도록 한 번만 실행하는 래퍼 함수
+ */
+private var isRequestInProgress = false
+/**
+ * 실제 파일 복사(임시파일) + 서버 업로드 로직
+ */
+/**
+ * 질문-답변 요청 함수 (카메라 액티비티와 동일하게 사용할 수 있음)
+ */
