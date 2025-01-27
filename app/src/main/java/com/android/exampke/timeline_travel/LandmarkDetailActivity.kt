@@ -2,7 +2,6 @@ package com.android.exampke.timeline_travel
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -60,14 +59,17 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
+@Suppress("DEPRECATION")
 class LandmarkDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,36 +101,21 @@ class LandmarkDetailActivity : ComponentActivity() {
 @Composable
 fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage: String) {
     val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context) // 데이터베이스 인스턴스
-    val scope = rememberCoroutineScope()
-
-    // 즐겨찾기 상태 관리
-    val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
-    var isFavorited by remember { mutableStateOf(false) }
 
     val landmarkNameState = remember { mutableStateOf("서버에서 로딩중...") }
     val landmarkDescriptionState = remember { mutableStateOf("서버 설명 로딩중...") }
-    // 서버 업로드 중복 요청 방지
-    var isRequestInProgress by remember { mutableStateOf(false) }
     // 질문/답변 상태
-    val questionText = remember { mutableStateOf("") }
     val questionAnswer = remember { mutableStateOf("질문에 대한 답변이 여기에 표시됩니다.") }
-    val landmarkName = remember { mutableStateOf("랜드마크 이름을 로드 중...") }
-
     LaunchedEffect(Unit) {
         landmarkNameState.value = context.getString(R.string.loadfromserver)
         landmarkDescriptionState.value = context.getString(R.string.loadfromserver)
         questionAnswer.value = context.getString(R.string.questionAnswer)
     }
 
-    LaunchedEffect(saveList.value) {
-        saveList.value.forEachIndexed { index, item ->
-            if (item.landmarkName == landmark.name) {
-                isFavorited = true
-            }
-        }
-    }
 
+
+    // 서버 업로드 중복 요청 방지
+    var isRequestInProgress by remember { mutableStateOf(false) }
     LaunchedEffect(landmark.images) {
         if (!isRequestInProgress) {
             isRequestInProgress = true
@@ -156,7 +143,6 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage
         }
     }
 
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -166,19 +152,31 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage
     ) {
         Row {
             Spacer(modifier = Modifier.weight(1f))
+            // 즐겨찾기 상태 관리
+            val db = AppDatabase.getDatabase(context) // 데이터베이스 인스턴스
+            val scope = rememberCoroutineScope()
+            val saveList = db.saveDataDao().getAll().collectAsState(emptyList())
+            var isFavorite by remember { mutableStateOf(false) }
+            LaunchedEffect(saveList.value) {
+                saveList.value.forEach { item ->
+                    if (item.landmarkName == landmark.name) {
+                        isFavorite = true
+                    }
+                }
+            }
             Icon(
                 painter = painterResource(id = R.drawable.icon_favorite),
                 contentDescription = "favorite",
-                tint = if (isFavorited) Color.Unspecified else Color.Gray,
+                tint = if (isFavorite) Color.Unspecified else Color.Gray,
                 modifier = Modifier
                     .clickable {
                         scope.launch(Dispatchers.IO) {
-                            if (isFavorited) {
+                            if (isFavorite) {
                                 db.saveDataDao().deleteByName(landmark.name)
                             } else {
                                 db.saveDataDao().insertAll(SaveData(landmarkName = landmark.name))
                             }
-                            isFavorited = !isFavorited
+                            isFavorite = !isFavorite
                         }
                     }
             )
@@ -191,9 +189,8 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage
                 .height(280.dp)
                 .width(210.dp)
                 .clip(RoundedCornerShape(8.dp))
+                .padding(bottom = 10.dp)
         )
-
-        Spacer(modifier = Modifier.height(10.dp))
         // (서버 응답) 랜드마크 이름, 설명
         Text(
             landmark.name, fontSize = 20.sp,
@@ -201,14 +198,13 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage
         )
         LandmarkLocation(landmark)
 
-        Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = stringResource(R.string.description),
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Start)
-                .padding(vertical = 15.dp)
+                .padding(vertical = 20.dp)
         )
         Spacer(
             modifier = Modifier
@@ -231,15 +227,17 @@ fun LandmarkDetailScreen(modifier: Modifier, landmark: Landmark, currentLanguage
             YouTubePlayerScreen(videoId = videoId)
         }
         Spacer(modifier = Modifier.height(20.dp))
+
         // 질문 입력 + 버튼
+        val questionText = remember { mutableStateOf("") }
         TextField(
             value = questionText.value,
             onValueChange = { questionText.value = it },
             placeholder = { Text(stringResource(R.string.enter_question)) },
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+        val landmarkName = remember { mutableStateOf("랜드마크 이름을 로드 중...") }
         Button(
             onClick = {
                 if (questionText.value.isNotBlank()) {
@@ -304,12 +302,12 @@ suspend fun downloadImageToFile(context: Context, imageUrl: String): File? {
             val request = Request.Builder().url(imageUrl).build()
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                Log.e("Download", "이미지 다운로드 실패: ${response.message}")
+                Timber.tag("Download").e("이미지 다운로드 실패: ${response.message}")
                 return@withContext null
             }
             val body: ResponseBody? = response.body
             if (body == null) {
-                Log.e("Download", "ResponseBody가 null입니다.")
+                Timber.tag("Download").e("ResponseBody가 null입니다.")
                 return@withContext null
             }
             val tempFile = File.createTempFile("landmark_download", ".jpg", context.cacheDir)
@@ -320,7 +318,7 @@ suspend fun downloadImageToFile(context: Context, imageUrl: String): File? {
             }
             tempFile
         } catch (e: Exception) {
-            Log.e("Download", "이미지 다운로드 중 예외 발생: ${e.message}")
+            Timber.tag("Download").e("이미지 다운로드 중 예외 발생: ${e.message}")
             null
         }
     }
@@ -337,11 +335,11 @@ fun uploadImageToServer(
 ) {
     try {
         // Multipart 변환
-        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+        val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
         // 언어 파라미터 생성
-        val languagePart = RequestBody.create("text/plain".toMediaTypeOrNull(), currentLanguage)
+        val languagePart = currentLanguage.toRequestBody("text/plain".toMediaTypeOrNull())
         // Retrofit 호출
 
         // Retrofit 호출 시 언어 파라미터 추가
@@ -356,18 +354,18 @@ fun uploadImageToServer(
                     val description = apiResponse?.answer ?: applicationContext.getString(R.string.cannot_find_description)
                     onSuccess(landmarkName, description)
                 } else {
-                    Log.e("Upload", "서버 응답 오류: ${response.errorBody()?.string()}")
+                    Timber.tag("Upload").e("서버 응답 오류: ${response.errorBody()?.string()}")
                     onError("서버 응답 오류가 발생했습니다.")
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                Log.e("Upload", "서버 호출 실패: ${t.message}")
+                Timber.tag("Upload").e("서버 호출 실패: ${t.message}")
                 onError("서버 호출 실패 / 네트워크 오류")
             }
         })
     } catch (e: Exception) {
-        Log.e("Upload", "이미지 업로드 중 예외: ${e.message}")
+        Timber.tag("Upload").e("이미지 업로드 중 예외: ${e.message}")
         onError("이미지 업로드 중 예외 발생")
     }
 }
@@ -393,18 +391,18 @@ private fun askQuestionToServer(
                     val apiResponse = response.body()
                     onAnswerReceived(apiResponse?.answer ?: "답변을 가져올 수 없습니다.")
                 } else {
-                    Log.e("AskQuestion", "서버 응답 오류: ${response.errorBody()?.string()}")
+                    Timber.tag("AskQuestion").e("서버 응답 오류: ${response.errorBody()?.string()}")
                     onAnswerReceived("서버 응답 오류가 발생했습니다.")
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                Log.e("AskQuestion", "서버 호출 실패: ${t.message}")
+                Timber.tag("AskQuestion").e("서버 호출 실패: ${t.message}")
                 onAnswerReceived("네트워크 오류가 발생했습니다.")
             }
         })
     } catch (e: Exception) {
-        Log.e("AskQuestion", "질문 전송 중 오류: ${e.message}")
+        Timber.tag("AskQuestion").e("질문 전송 중 오류: ${e.message}")
         onAnswerReceived("질문 처리 중 오류가 발생했습니다.")
     }
 }
